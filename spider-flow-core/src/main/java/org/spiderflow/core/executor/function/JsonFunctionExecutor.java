@@ -32,5 +32,4 @@ public class JsonFunctionExecutor implements FunctionExecutor{
 	public static String stringify(Object object){
 		return object != null ? JSON.toJSONString(object) : null;
 	}
-
 }

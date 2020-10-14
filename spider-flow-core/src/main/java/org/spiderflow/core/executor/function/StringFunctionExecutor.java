@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.spiderflow.annotation.Comment;
 import org.spiderflow.annotation.Example;
+import org.spiderflow.core.utils.ExtractUtils;
 import org.spiderflow.executor.FunctionExecutor;
 import org.springframework.stereotype.Component;
 
@@ -36,15 +37,7 @@ public class StringFunctionExecutor implements FunctionExecutor {
     @Comment("提取数字")
     @Example("${string.extractNum(str)}")
     public static Integer extractNum(String content) {
-        try {
-            String regEx = "[^0-9]";
-            Pattern p = Pattern.compile(regEx);
-            Matcher m = p.matcher(content);
-            return content != null ? Integer.valueOf(m.replaceAll("").trim()) : 0;
-        } catch (Exception e) {
-
-        }
-        return 0;
+        return content != null ? ExtractUtils.extractNumber(content) : 0;
     }
 
     @Comment("截取字符串方法")

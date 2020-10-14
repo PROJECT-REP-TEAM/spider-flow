@@ -121,10 +121,7 @@ public class HttpRequest {
     }
 
     public HttpRequest proxy(String host, int port) {
-
-
         this.connection.proxy(host, port);
-
         return this;
     }
 
