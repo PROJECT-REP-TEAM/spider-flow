@@ -141,6 +141,10 @@ public class SeleniumExecutor implements ShapeExecutor {
             logger.error("请求出错，异常信息：{}", e);
             if (driver != null) {
                 try {
+                    driver.close();
+                } catch (Exception ignored) {
+                }
+                try {
                     driver.quit();
                 } catch (Exception ignored) {
                 }

@@ -3,23 +3,26 @@ package org.spiderflow.selenium.io;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Command;
 import org.spiderflow.io.SpiderResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class SeleniumResponse implements SpiderResponse{
-	
+
 	private WebDriver driver;
 
 	private Actions actionsObj;
-	
+
 	public SeleniumResponse(WebDriver driver){
 		this.driver = driver;
 	}
-	
+
 	@Override
 	public int getStatusCode() {
 		return 0;
@@ -34,12 +37,12 @@ public class SeleniumResponse implements SpiderResponse{
 	public byte[] getBytes() {
 		return null;
 	}
-	
+
 	@Override
 	public String getHtml() {
 		return driver.getPageSource();
 	}
-	
+
 	@Override
 	public Map<String, String> getCookies() {
 		Set<Cookie> cookies = driver.manage().getCookies();
@@ -51,7 +54,7 @@ public class SeleniumResponse implements SpiderResponse{
 		}
 		return cookieMap;
 	}
-	
+
 	@Override
 	public Map<String, String> getHeaders() {
 		return null;
@@ -90,6 +93,10 @@ public class SeleniumResponse implements SpiderResponse{
 	}
 
 	public void quit(){
+		try {
+			driver.close();
+		} catch (Exception ignored) {
+		}
 		try {
 			driver.quit();
 		} catch (Exception ignored) {

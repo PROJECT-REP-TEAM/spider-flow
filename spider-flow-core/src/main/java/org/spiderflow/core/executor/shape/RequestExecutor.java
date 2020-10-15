@@ -239,7 +239,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                     Object requestBody = ExpressionUtils.execute(node.getStringJsonValue(REQUEST_BODY), variables);
                     context.pause(node.getNodeId(), "request-body", REQUEST_BODY, requestBody);
                     request.data(requestBody);
-                    logger.info("设置请求Body:{}", requestBody);
+                    logger.debug("设置请求Body:{}", requestBody);
                 } catch (Exception e) {
                     logger.debug("设置请求Body出错", e);
                 }
@@ -431,7 +431,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                     try {
                         value = ExpressionUtils.execute(headerValue, variables);
                         context.pause(node.getNodeId(), "request-header", headerName, value);
-                        logger.info("设置请求Header：{}={}", headerName, value);
+                        logger.debug("设置请求Header：{}={}", headerName, value);
                     } catch (Exception e) {
                         logger.error("设置请求Header：{}出错,异常信息：{}", headerName, e);
                     }
