@@ -1,6 +1,6 @@
-package org.spiderflow.common;
+package org.spiderflow.config;
 
-public class AbuyunProxy {
+public class AbuyunProxyConfig {
     public static final String proxyHost = "http-pro.abuyun.com";
     public static final Integer proxyPort = 9010;
     public static final String proxyUser = "H3PAPNZ2708379LP";

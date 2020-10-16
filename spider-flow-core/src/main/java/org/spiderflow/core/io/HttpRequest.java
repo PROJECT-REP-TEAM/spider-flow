@@ -12,7 +12,7 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
-import org.spiderflow.common.AbuyunProxy;
+import org.spiderflow.config.AbuyunProxyConfig;
 
 /**
  * 请求对象包装类
@@ -120,14 +120,14 @@ public class HttpRequest {
     public HttpRequest proxyDef() {
         Authenticator.setDefault(new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(AbuyunProxy.proxyUser, AbuyunProxy.proxyPass.toCharArray());
+                return new PasswordAuthentication(AbuyunProxyConfig.proxyUser, AbuyunProxyConfig.proxyPass.toCharArray());
             }
         });
 
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(AbuyunProxy.proxyHost, AbuyunProxy.proxyPort));
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(AbuyunProxyConfig.proxyHost, AbuyunProxyConfig.proxyPort));
 
         this.connection.proxy(proxy);
-        this.connection.header(AbuyunProxy.switchIpHeaderKey, AbuyunProxy.switchIpHeaderVal);
+        this.connection.header(AbuyunProxyConfig.switchIpHeaderKey, AbuyunProxyConfig.switchIpHeaderVal);
         return this;
     }
 
