@@ -267,7 +267,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                 } catch (Exception e) {
                     logger.error("设置代理出错，异常信息:{}", e);
                 }
-            }else{
+            } else {
                 request.proxyDef();
             }
             Throwable exception = null;
@@ -291,6 +291,9 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                     variables.put("resp", response);
                 }
             } catch (IOException e) {
+                successed = false;
+                exception = e;
+            } catch (Error e) {
                 successed = false;
                 exception = e;
             } finally {
