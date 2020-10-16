@@ -12,6 +12,7 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
+import org.spiderflow.common.AbuyunProxy;
 
 /**
  * 请求对象包装类
@@ -19,15 +20,6 @@ import org.jsoup.Jsoup;
  * @author Administrator
  */
 public class HttpRequest {
-
-    public static final String proxyHost = "http-pro.abuyun.com";
-    public static final Integer proxyPort = 9010;
-    public static final String proxyUser = "H3PAPNZ2708379LP";
-    public static final String proxyPass = "D64FCAC1B769123E";
-    public static final String switchIpHeaderKey = "Proxy-Switch-Ip";
-    public static final String switchIpHeaderVal = "yes";
-    public static final String scheme = "http";
-
 
     private Connection connection = null;
 
@@ -128,14 +120,14 @@ public class HttpRequest {
     public HttpRequest proxyDef() {
         Authenticator.setDefault(new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(proxyUser, proxyPass.toCharArray());
+                return new PasswordAuthentication(AbuyunProxy.proxyUser, AbuyunProxy.proxyPass.toCharArray());
             }
         });
 
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(AbuyunProxy.proxyHost, AbuyunProxy.proxyPort));
 
         this.connection.proxy(proxy);
-        this.connection.header(switchIpHeaderKey, switchIpHeaderVal);
+        this.connection.header(AbuyunProxy.switchIpHeaderKey, AbuyunProxy.switchIpHeaderVal);
         return this;
     }
 
