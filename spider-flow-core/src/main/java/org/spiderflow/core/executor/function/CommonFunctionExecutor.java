@@ -102,62 +102,6 @@ public class CommonFunctionExecutor implements FunctionExecutor {
     }
 
 
-    @Comment("将两个数字对象合并为键值对")
-    @Example("${common.toJsonParamArrayStr(['startNumber','price'],priceNumItems1,priceNumItems2)}")
-    public static String toJsonParamArrayStr(ArrayList<String> keys, Object object1, Object object2) {
-        List<Map<String, Object>> list = new ArrayList<>();
-
-        if (keys == null || keys.size() == 0 || object1 == null || object2 == null) {
-            return null;
-        }
-
-        List<String> oneDatas = new ArrayList<>();
-
-        if (object1 instanceof Elements) {
-            Elements elements1 = (Elements) object1;
-            Iterator<Element> els = elements1.iterator();
-            while (els.hasNext()) {
-                Element element = els.next();
-                String value = element.text();
-                oneDatas.add(value);
-            }
-        } else if (object1 instanceof Element) {
-            Element element = (Element) object1;
-            String value = element.text();
-            oneDatas.add(value);
-        }
-
-
-        List<String> twoDatas = new ArrayList<>();
-
-        if (object2 instanceof Elements) {
-            Elements elements2 = (Elements) object2;
-            Iterator<Element> els = elements2.iterator();
-            while (els.hasNext()) {
-                Element element = els.next();
-                String value = element.text();
-                twoDatas.add(value);
-            }
-        } else if (object2 instanceof Element) {
-            Element element = (Element) object2;
-            String value = element.text();
-            twoDatas.add(value);
-        }
-
-        int size = oneDatas.size();
-        for (int i = 0; i < size; i++) {
-            String data1 = oneDatas.get(i);
-            String data2 = twoDatas.get(i);
-            Map<String, Object> maps = new HashMap<>();
-            maps.put(keys.get(0), data1);
-            maps.put(keys.get(1), data2);
-            list.add(maps);
-        }
-
-        return JSON.toJSONString(list);
-    }
-
-
     public static String getMapValue(Element element, String selectKey, String attrKey) {
         List<String> key = null;
         if (attrKey != null) {
