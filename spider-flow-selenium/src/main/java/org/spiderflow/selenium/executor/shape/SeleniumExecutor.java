@@ -111,6 +111,7 @@ public class SeleniumExecutor implements ShapeExecutor {
             driver = providerMap.get(driverType).getWebDriver(node, proxy);
             driver.manage().timeouts().pageLoadTimeout(NumberUtils.toInt(node.getStringJsonValue(PAGE_LOAD_TIMEOUT), 60 * 1000), TimeUnit.MILLISECONDS);
             driver.manage().timeouts().implicitlyWait(NumberUtils.toInt(node.getStringJsonValue(IMPLICITLY_WAIT_TIMEOUT), 3 * 1000), TimeUnit.MILLISECONDS);
+            driver.manage().timeouts().setScriptTimeout(NumberUtils.toInt(node.getStringJsonValue(PAGE_LOAD_TIMEOUT), 3 * 1000), TimeUnit.MILLISECONDS);
             //设置自动管理的Cookie
             boolean cookieAutoSet = !"0".equals(node.getStringJsonValue(COOKIE_AUTO_SET));
             CookieContext cookieContext = context.getCookieContext();
