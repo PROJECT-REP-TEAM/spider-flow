@@ -142,6 +142,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.spiderflow</groupId>
+				<artifactId>spider-flow-reset</artifactId>
+				<version>${spider-flow.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.spiderflow</groupId>
 				<artifactId>spider-flow-proxypool</artifactId>
 				<version>${spider-flow.version}</version>
 			</dependency>
@@ -177,5 +182,6 @@
 		<module>spider-flow-core</module>
 		<module>spider-flow-selenium</module>
 		<module>spider-flow-web</module>
-	</modules>
+        <module>spider-flow-reset</module>
+    </modules>
 </project>

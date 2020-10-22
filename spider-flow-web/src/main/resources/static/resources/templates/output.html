@@ -37,12 +37,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-row layui-col-space20">
+			<div class="layui-row layui-col-space20" style="height: 100px">
 				<div class="layui-col-md3">
 					<div class="layui-form-item">
 						<label class="layui-form-label">数据输出</label>
 						<div class="layui-input-block">
 							<input type="checkbox" target-div="databaseDiv" title="输出到数据库" value="output-database" lay-skin="primary" {{d.data.object['output-database'] == '1' ? 'checked' : ''}} lay-filter="targetCheck"/>
+							<input type="checkbox" target-div="remoteserverDiv" title="输出到远程服务" value="output-remoteserver" lay-skin="primary" {{d.data.object['output-remoteserver'] == '1' ? 'checked' : ''}} lay-filter="targetCheck"/>
 							<input type="checkbox" class="oCheckbox" target-div="csvDiv" title="输出到CSV文件" value="output-csv" lay-skin="primary" {{d.data.object['output-csv'] == '1' ? 'checked' : ''}} lay-filter="targetCheck"/>
 						</div>
 					</div>
@@ -64,6 +65,12 @@
 						<input type="text" name="tableName" placeholder="请输入表名" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.tableName}}">
 					</div>
 				</div>
+
+				  <div class="layui-col-md3 remoteserverDiv" {{d.data.object['output-remoteserver'] == '1' ? '' : 'style="display: none;"'}}>
+					  <div class="layui-form-item">
+						  <input type="text" name="remoteUrl" placeholder="请输入远程服务地址" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.remoteUrl}}">
+					  </div>
+				  </div>
 				<div class="layui-col-md2 csvDiv" {{d.data.object['output-csv'] == '1' ? '' : 'style="display: none;"'}}>
 					<div class="layui-form-item">
 						<input type="text" name="csvName" placeholder="请输入文件名" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.csvName}}">
