@@ -71,9 +71,7 @@ public class SpiderJobManager {
 	}
 	
 	public void run(String id){
-		Spider.executorInstance.submit(()->{
-			spiderJob.run(id);
-		});
+		Spider.executorInstance.submit(()-> spiderJob.run(id));
 	}
 	
 	public boolean remove(String id){

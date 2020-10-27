@@ -18,6 +18,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 爬虫定时执行
@@ -36,7 +37,7 @@ public class SpiderJob extends QuartzJobBean {
     @Autowired
     private TaskService taskService;
 
-    private static Map<Integer, SpiderContext> contextMap = new HashMap<>();
+    private static Map<Integer, SpiderContext> contextMap = new ConcurrentHashMap<>();
 
     @Value("${spider.job.enable:true}")
     private boolean spiderJobEnable;
@@ -98,7 +99,7 @@ public class SpiderJob extends QuartzJobBean {
         return contextMap.get(taskId);
     }
 
-    public static List<SpiderContext> getSpiderContext() {
-        return new ArrayList<>(contextMap.values());
+    public static Map<Integer,SpiderContext> getSpiderContext() {
+        return new ConcurrentHashMap(contextMap);
     }
 }

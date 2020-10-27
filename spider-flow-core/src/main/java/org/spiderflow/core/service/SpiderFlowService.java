@@ -155,6 +155,7 @@ public class SpiderFlowService extends ServiceImpl<SpiderFlowMapper, SpiderFlow>
 	public void resetExecuteCount(String id){
 		sfMapper.resetExecuteCount(id);
 	}
+
 	public void remove(String id){
 		sfMapper.deleteById(id);
 		spiderJobManager.remove(id);

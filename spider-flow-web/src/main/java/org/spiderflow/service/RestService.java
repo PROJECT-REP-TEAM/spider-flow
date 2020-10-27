@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Service
@@ -30,9 +31,8 @@ public class RestService {
      */
     public String post(String url, String data, String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-        headers.add("Content-Encoding", "UTF-8");
-        headers.add("Content-Type", "application/json; charset=UTF-8");
+        MediaType mediaType = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(mediaType);
         if (token != null) {
             headers.add("Authorization", "Bearer " + token);
         }
@@ -47,18 +47,18 @@ public class RestService {
      * @param token JWT所需的Token，不需要的可去掉
      * @return
      */
-    public String get(String url, String token) {
+    public String get(String url, String token) throws UnsupportedEncodingException {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-        headers.add("Content-Encoding", "UTF-8");
-        headers.add("Content-Type", "application/json; charset=UTF-8");
+        MediaType mediaType = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(mediaType);
         if (token != null) {
-            headers.add("Authorization", token);
+            headers.add("Authorization", "Bearer " +token);
         }
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         String responseBody = response.getBody();
-        return responseBody;
+        String result = new String(responseBody.getBytes("ISO-8859-1"), "UTF-8");
+        return result;
     }
 
 
@@ -82,7 +82,7 @@ public class RestService {
             headers.add("Accept", MediaType.APPLICATION_JSON.toString());
             headers.setContentType(MediaType.parseMediaType("multipart/form-data;charset=UTF-8"));
             if (token != null) {
-                headers.add("Authorization", token);
+                headers.add("Authorization", "Bearer " +token);
             }
             MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
             // 把临时文件变成 FileSystemResource
@@ -99,15 +99,11 @@ public class RestService {
     }
 
 
-    public String get(String url) {
-        return restTemplate.getForObject(url, String.class);
-    }
 
     public String request(String url, HttpMethod method, String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-        headers.add("Content-Encoding", "UTF-8");
-        headers.add("Content-Type", "application/json; charset=UTF-8");
+        MediaType mediaType = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(mediaType);
         if (token != null) {
             headers.add("Authorization", "Bearer " + token);
         }
@@ -127,9 +123,8 @@ public class RestService {
      */
     public String postForJSON(String url, Object requestParams, String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-        headers.add("Content-Encoding", "UTF-8");
-        headers.add("Content-Type", "application/json; charset=UTF-8");
+        MediaType mediaType = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(mediaType);
         if (token != null) {
             headers.add("Authorization", "Bearer " + token);
         }
@@ -152,12 +147,10 @@ public class RestService {
             reqMap.add(entry.getKey(), entry.getValue());
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-        headers.add("Content-Encoding", "UTF-8");
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         if (token != null) {
             headers.add("Authorization", "Bearer " + token);
         }
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         String res;
         try {
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(reqMap, headers);
@@ -183,9 +176,8 @@ public class RestService {
             body.add(key, requestParams.get(key));
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
-        headers.add("Content-Encoding", "UTF-8");
-        headers.add("Content-Type", "application/json; charset=UTF-8");
+        MediaType mediaType = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(mediaType);
         if (token != null) {
             headers.add("Authorization", "Bearer " + token);
         }

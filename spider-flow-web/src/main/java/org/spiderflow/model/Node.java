@@ -5,51 +5,26 @@ import java.util.Date;
 import java.util.List;
 
 public class Node {
-    private String id;
-    private String ip;
+    private String nodeId;
+    private String nodeIp;
     private String hostname;
-    private int taskCount;
-    private List<NodeTask> taskList;
+    private List<NodeFlow> flowList;
     private Date createTime;
 
-    public String getId() {
-        return id;
+    public String getNodeId() {
+        return nodeId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 
-    public int getTaskCount() {
-        return taskCount;
+    public String getNodeIp() {
+        return nodeIp;
     }
 
-    public void setTaskCount(int taskCount) {
-        this.taskCount = taskCount;
-    }
-
-    public List<NodeTask> getTaskList() {
-        return taskList;
-    }
-
-    public void setTaskList(List<NodeTask> taskList) {
-        this.taskList = taskList;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setNodeIp(String nodeIp) {
+        this.nodeIp = nodeIp;
     }
 
     public String getHostname() {
@@ -58,5 +33,21 @@ public class Node {
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    public List<NodeFlow> getFlowList() {
+        return flowList;
+    }
+
+    public void setFlowList(List<NodeFlow> flowList) {
+        this.flowList = flowList;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
