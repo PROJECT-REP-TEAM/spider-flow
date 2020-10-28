@@ -71,6 +71,16 @@
 						  <input type="text" name="remoteUrl" placeholder="请输入远程服务地址" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.remoteUrl}}">
 					  </div>
 				  </div>
+
+					<div class="layui-col-md2 remoteserverDiv" {{d.data.object['output-remoteserver'] == '1' ? '' : 'style="display: none;"'}}>
+					<div class="layui-form-item">
+						<div class="layui-form-item">
+							<input type="text" name="token" placeholder="请输入Token" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.token}}">
+						</div>
+					</div>
+				</div>
+
+
 				<div class="layui-col-md2 csvDiv" {{d.data.object['output-csv'] == '1' ? '' : 'style="display: none;"'}}>
 					<div class="layui-form-item">
 						<input type="text" name="csvName" placeholder="请输入文件名" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.csvName}}">

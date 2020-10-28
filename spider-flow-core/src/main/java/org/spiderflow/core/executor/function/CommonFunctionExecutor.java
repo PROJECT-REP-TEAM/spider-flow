@@ -55,7 +55,7 @@ public class CommonFunctionExecutor implements FunctionExecutor {
         List<Map<String, Object>> list = new ArrayList<>();
 
         if (keys == null || selects == null || keys.size() == 0 || selects.size() == 0 || keys.size() != selects.size()) {
-            return null;
+            return "{}";
         }
 
         if (object instanceof Elements) {
@@ -99,6 +99,13 @@ public class CommonFunctionExecutor implements FunctionExecutor {
                 list.add(datas);
         }
         return object != null ? JSON.toJSONString(list) : null;
+    }
+
+
+    @Comment("将对象装为json键值对字符串")
+    @Example("${common.toJsonParamStringify(objVar,keys,selects,attrs)}")
+    public static String toJsonParamStringify(Object object, ArrayList<String> keys, ArrayList<String> selects, ArrayList<String> attrs) {
+        return toJsonParamStr(object, keys, selects, attrs).replaceAll("\"", "\\\"");
     }
 
 

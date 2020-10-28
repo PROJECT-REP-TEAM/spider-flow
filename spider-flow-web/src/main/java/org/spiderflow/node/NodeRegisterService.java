@@ -6,10 +6,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spiderflow.context.SpiderContext;
-import org.spiderflow.controller.SpiderFlowController;
 import org.spiderflow.core.Spider;
 import org.spiderflow.core.job.SpiderJob;
-import org.spiderflow.core.job.SpiderJobContext;
 import org.spiderflow.core.model.SpiderFlow;
 import org.spiderflow.core.model.Task;
 import org.spiderflow.core.service.SpiderFlowService;
@@ -22,16 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class NodeRegisterService {
@@ -44,6 +38,9 @@ public class NodeRegisterService {
 
     @Value("${spider.node.cmd.url}")
     private String takeNodeCmdUrl;
+
+    @Value("${server.port}")
+    private Integer serverPort;
 
     @Value("${random.uuid}")
     private String nodeId;
@@ -110,6 +107,7 @@ public class NodeRegisterService {
         Node node = new Node();
         node.setNodeId(nodeId);
         node.setNodeIp(lhu.getIp());
+        node.setNodePort(String.valueOf(serverPort));
         node.setHostname(lhu.getHostName());
         node.setCreateTime(new Date());
 
@@ -185,10 +183,10 @@ public class NodeRegisterService {
         try {
             String rs = restService.get(takeNodeCmdUrl + "/" + nodeId, registerToken);
             if (StringUtils.hasText(rs)) {
-                System.out.println(rs);
                 JSONObject jsonObject = JSON.parseObject(rs);
                 JSONObject data = jsonObject.getJSONObject("data");
                 if (data != null) {
+                    System.out.println(rs);
                     String cmd = data.getString("cmd");
                     String flowId = data.getString("flowId");
                     String action = data.getString("action");

@@ -11,13 +11,13 @@
 		<script>mxBasePath = 'js/mxgraph';$=layui.$</script>
 		<script type="text/javascript" src="js/mxgraph/mxgraph.min.js" ></script>
 		<script type="text/javascript" src="js/common.js" ></script>
-		<script type="text/javascript" src="js/spider-editor.js" ></script>
+		<script type="text/javascript" src="js/spider-editor.js?11" ></script>
 		<script type="text/javascript" src="js/canvas-viewer.js" ></script>
 		<script type="text/javascript" src="js/monaco/loader.js"></script>
 		<script type="text/javascript">require.config({ paths: { 'vs': 'js/monaco' }});</script>
 		<script type="text/javascript" src="js/monaco/language/spiderflow/spiderflow.js"></script>
 		<script type="text/javascript" src="js/jsontree/jsontree.js" ></script>
-		<script type="text/javascript" src="js/editor.js" ></script>
+		<script type="text/javascript" src="js/editor.js?11" ></script>
 	</head>
 	<body>
 		<div class="main-container">
@@ -112,6 +112,7 @@
 		<script type="text/html" id="variable-name-tmpl">
 			<input type="text" name="variable-name" placeholder="请输入变量名" autocomplete="off" class="layui-input array" value="{{=d['variable-name']}}">
 		</script>
+
 		<script type="text/html" id="variable-description-tmpl">
 			<input type="text" name="variable-description" placeholder="请输入变量描述" autocomplete="off" class="layui-input array" value="{{=d['variable-description']}}">
 		</script>

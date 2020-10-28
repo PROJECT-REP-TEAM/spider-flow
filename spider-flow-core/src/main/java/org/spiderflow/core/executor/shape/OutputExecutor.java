@@ -53,6 +53,8 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
 
     public static final String REMOTE_NAME = "remoteUrl";
 
+    public static final String TOKEN_NAME = "token";
+
     public static final String CSV_NAME = "csvName";
 
     public static final String CSV_ENCODING = "csvEncoding";
@@ -117,7 +119,8 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
 
         if (remoteserverFlag) {
             String remoteUrl = node.getStringJsonValue(REMOTE_NAME);
-            outputRemote(remoteUrl, outputData);
+            String token = node.getStringJsonValue(TOKEN_NAME);
+            outputRemote(remoteUrl, token, outputData);
         }
 
         context.addOutput(output);
@@ -219,7 +222,7 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
         }
     }
 
-    private void outputRemote(String remoteUrl, Map<String, Object> data) {
+    private void outputRemote(String remoteUrl, String token, Map<String, Object> data) {
         if (data == null || data.isEmpty()) {
             return;
         }
@@ -229,6 +232,7 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
             HttpHeaders headers = new HttpHeaders();
             HttpMethod method = HttpMethod.POST;
             headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            headers.set("Authorization", token);
             HttpEntity<String> entity = new HttpEntity<>(JSON.toJSONString(data), headers);
             template.exchange(remoteUrl, method, entity, String.class);
         } catch (Exception e) {

@@ -18,6 +18,7 @@ function setTheSkin(value){
 	}
 	document.querySelector('#theSkin').setAttribute('href','css/'+value+'.css');
 }
+
 setTheSkin(getCookie('theSkin'));
 function openTab(title,id,href){
 	if($(".layui-tab[lay-filter=admin-tab]").find("[lay-id="+id+"]").length > 0){	//判断是否已打开

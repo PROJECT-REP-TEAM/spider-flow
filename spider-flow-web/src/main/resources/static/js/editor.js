@@ -270,7 +270,7 @@ $(function(){
 			return;
 		}
 		$.ajax({
-			url : 'resources/templates/' + template +".html",
+			url : 'resources/templates/' + template +".html?_t"+new Date().getTime(),
 			async :false,
 			success : function(content){
 				templateCache[template] = content;

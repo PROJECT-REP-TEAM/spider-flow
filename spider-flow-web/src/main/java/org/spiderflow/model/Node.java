@@ -7,6 +7,7 @@ import java.util.List;
 public class Node {
     private String nodeId;
     private String nodeIp;
+    private String nodePort;
     private String hostname;
     private List<NodeFlow> flowList;
     private Date createTime;
@@ -49,5 +50,13 @@ public class Node {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getNodePort() {
+        return nodePort;
+    }
+
+    public void setNodePort(String nodePort) {
+        this.nodePort = nodePort;
     }
 }
