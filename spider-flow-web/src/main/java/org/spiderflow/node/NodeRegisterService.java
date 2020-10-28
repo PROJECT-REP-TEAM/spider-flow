@@ -2,7 +2,11 @@ package org.spiderflow.node;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spiderflow.context.SpiderContext;
+import org.spiderflow.controller.SpiderFlowController;
 import org.spiderflow.core.Spider;
 import org.spiderflow.core.job.SpiderJob;
 import org.spiderflow.core.job.SpiderJobContext;
@@ -22,6 +26,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,7 +60,7 @@ public class NodeRegisterService {
     private Spider spider;
 
     @Value("${spider.workspace}")
-    private String workspace;
+    private String workspcace;
 
     @Autowired
     private SpiderJob spiderJob;
@@ -61,10 +68,45 @@ public class NodeRegisterService {
     @Autowired
     private TaskService taskService;
 
+    private static Logger logger = LoggerFactory.getLogger(NodeRegisterService.class);
+
+    private Set<String> hideFlow = new HashSet<>();
+
+
+    private String nodeIdFile = "nodeId.txt";
+    private String hideNodeFile = "hideNode.txt";
+
+    @PostConstruct
+    public void init() {
+
+        try {
+            File file = new File(workspcace, nodeIdFile);
+            if (!file.exists()) {
+                file.createNewFile();
+                FileUtils.write(file, nodeId, "UTF-8");
+            } else {
+                nodeId = FileUtils.readFileToString(file, "UTF-8");
+            }
+        } catch (IOException ignored) {
+        }
+
+        try {
+            File hFile = new File(workspcace, hideNodeFile);
+            if (!hFile.exists()) {
+                hFile.createNewFile();
+            }
+            List<String> lines = FileUtils.readLines(hFile, "UTF-8");
+            if (lines != null) {
+                hideFlow.addAll(lines);
+            }
+        } catch (IOException ignored) {
+        }
+    }
 
     //3秒上报一次信息
     @Scheduled(fixedRate = 3000)
     public void registerNodeInfo() {
+
         Node node = new Node();
         node.setNodeId(nodeId);
         node.setNodeIp(lhu.getIp());
@@ -94,6 +136,10 @@ public class NodeRegisterService {
             String name = flow.getName();
             String id = flow.getId();
             Integer running = flow.getRunning();
+
+            if (hideFlow.contains(id)) {
+                continue;
+            }
 
             NodeFlow nodeFlow = new NodeFlow();
             nodeFlow.setFlowId(id);
@@ -130,28 +176,66 @@ public class NodeRegisterService {
     @Scheduled(fixedRate = 5000)
     public void takeNodeWork() throws UnsupportedEncodingException {
 
-      /*  "{" +
+      /*       "{" +
                 "\"cmd\":\"" + cmd + "\"," +
                 "\"action\":\"" + action + "\"," +
                 "\"taskId\":\"" + taskId + "\"," +
                 "\"flowId\":\"" + flowId + "\"" +
                 "}"*/
-        String rs = restService.get(takeNodeCmdUrl + "/" + nodeId, registerToken);
-        if (StringUtils.hasText(rs)) {
-            System.out.println(rs);
-            JSONObject jsonObject = JSON.parseObject(rs);
-            JSONObject data = jsonObject.getJSONObject("data");
-            if(data != null){
-                String cmd = data.getString("cmd");
-                String flowId = data.getString("flowId");
-                String action = data.getString("action");
-                Integer taskId = data.getInteger("taskId");
-                if ("run".equalsIgnoreCase(cmd)) {
-                    runAsync(flowId);
-                } else if ("stop".equalsIgnoreCase(cmd)) {
-                    stop(taskId);
+        try {
+            String rs = restService.get(takeNodeCmdUrl + "/" + nodeId, registerToken);
+            if (StringUtils.hasText(rs)) {
+                System.out.println(rs);
+                JSONObject jsonObject = JSON.parseObject(rs);
+                JSONObject data = jsonObject.getJSONObject("data");
+                if (data != null) {
+                    String cmd = data.getString("cmd");
+                    String flowId = data.getString("flowId");
+                    String action = data.getString("action");
+                    Integer taskId = data.getInteger("taskId");
+                    if ("run".equalsIgnoreCase(cmd)) {
+                        runAsync(flowId);
+                    } else if ("stop".equalsIgnoreCase(cmd)) {
+                        stop(taskId);
+                    } else if ("hide".equalsIgnoreCase(cmd)) {
+                        hide(flowId);
+                    } else if ("showAll".equalsIgnoreCase(cmd)) {
+                        showAll();
+                    }
                 }
             }
+        } catch (Exception e) {
+            logger.error("takeNodeWork error", e);
+        }
+    }
+
+    private void showAll() {
+        try {
+            hideFlow.clear();
+            File file = new File(workspcace, hideNodeFile);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileUtils.write(file, "", "UTF-8");
+        } catch (IOException ignored) {
+        }
+    }
+
+    private void hide(String flowId) {
+        hideFlow.add(flowId);
+        StringBuffer buffer = new StringBuffer();
+        hideFlow.forEach(h -> {
+            buffer.append(h);
+            buffer.append("\n");
+        });
+
+        try {
+            File file = new File(workspcace, hideNodeFile);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileUtils.write(file, buffer.toString(), "UTF-8");
+        } catch (IOException ignored) {
         }
     }
 
