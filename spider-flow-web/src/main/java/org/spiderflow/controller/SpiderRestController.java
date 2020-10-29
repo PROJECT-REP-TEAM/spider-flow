@@ -59,9 +59,7 @@ public class SpiderRestController {
 		task.setFlowId(flow.getId());
 		task.setBeginTime(new Date());
 		taskService.save(task);
-		Spider.executorInstance.submit(()->{
-			spiderJob.run(flow,task,null);
-		});
+		Spider.executorInstance.submit(()-> spiderJob.run(flow,task,null));
 		return new JsonBean<>(task.getId());
 	}
 

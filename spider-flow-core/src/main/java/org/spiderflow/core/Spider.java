@@ -81,7 +81,9 @@ public class Spider {
 	}
 
 	public List<SpiderOutput> run(SpiderFlow spiderFlow, SpiderContext context) {
-		return run(spiderFlow, context, new HashMap<>());
+		Map<String, Object> map = new HashMap<>();
+		map.put("flowId",context.getFlowId());
+		return run(spiderFlow, context, map);
 	}
 
 	public void runWithTest(SpiderNode root, SpiderContext context) {
