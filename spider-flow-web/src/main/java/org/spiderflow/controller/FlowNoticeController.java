@@ -30,9 +30,9 @@ public class FlowNoticeController {
 			flowNoticeService.saveOrUpdate(entity);
 		} catch (RuntimeException e) {
 			logger.error(e.getMessage(), e);
-			return new JsonBean<FlowNotice>(0, e.getMessage() == null ? "发生错误" : e.getMessage());
+			return new JsonBean<>(0, e.getMessage() == null ? "发生错误" : e.getMessage());
 		}
-		return new JsonBean<FlowNotice>(entity);
+		return new JsonBean<>(entity);
 	}
 
 	@RequestMapping("/find")
@@ -42,12 +42,12 @@ public class FlowNoticeController {
 			data = new FlowNotice();
 			data.setId(id);
 		}
-		return new JsonBean<FlowNotice>(data);
+		return new JsonBean<>(data);
 	}
 
 	@RequestMapping("/getNoticeWay")
 	public JsonBean<Map<String, String>> getNoticeWay() {
-		return new JsonBean<Map<String, String>>(FlowNoticeWay.getMap());
+		return new JsonBean<>(FlowNoticeWay.getMap());
 	}
 
 }

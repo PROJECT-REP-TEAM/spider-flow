@@ -28,6 +28,7 @@ public class ScriptController {
     public JsonBean<TreeNode<ScriptFile>> files(String script){
         return new JsonBean<>(scriptService.list(script));
     }
+
     @RequestMapping("/create")
     public JsonBean<Boolean> create(String scriptName){
         return new JsonBean<>(scriptService.createScript(scriptName));

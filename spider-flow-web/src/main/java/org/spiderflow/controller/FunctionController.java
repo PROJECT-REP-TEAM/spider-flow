@@ -26,7 +26,7 @@ public class FunctionController {
             select.like("name",name);
         }
         select.orderByDesc("create_date");
-        return functionService.page(new Page<Function>(page, size), select);
+        return functionService.page(new Page<>(page, size), select);
     }
 
     @RequestMapping("/save")

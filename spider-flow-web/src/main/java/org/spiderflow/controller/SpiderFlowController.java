@@ -174,11 +174,6 @@ public class SpiderFlowController {
         return new JsonBean<>(expressionEngine.getExpressionObjectMap());
     }
 
-    /*@RequestMapping("/grammers")
-    public JsonBean<List<Grammer>> grammers() {
-        return new JsonBean<>(this.grammers);
-    }
-*/
     @GetMapping("/recent5TriggerTime")
     public List<String> getRecent5TriggerTime(String cron) {
         return spiderFlowService.getRecentTriggerTime(cron, 5);

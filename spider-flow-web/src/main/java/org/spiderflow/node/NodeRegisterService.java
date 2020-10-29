@@ -268,6 +268,7 @@ public class NodeRegisterService {
             return new JsonBean<>(0, "任务不存在！");
         }
         context.setRunning(false);
+        taskService.removeById(taskId);
         return new JsonBean<>(1, "停止成功！");
 
     }
