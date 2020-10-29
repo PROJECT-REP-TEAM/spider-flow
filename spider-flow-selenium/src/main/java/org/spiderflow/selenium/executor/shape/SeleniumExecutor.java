@@ -15,7 +15,7 @@ import org.spiderflow.model.Shape;
 import org.spiderflow.model.SpiderNode;
 import org.spiderflow.selenium.driver.DriverProvider;
 import org.spiderflow.selenium.io.SeleniumResponse;
-import org.spiderflow.selenium.utils.SeleniumResponseHolder;
+import org.spiderflow.utils.SpiderResponseHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -90,6 +90,7 @@ public class SeleniumExecutor implements ShapeExecutor {
             logger.error("找不到驱动：{}", driverType);
             return;
         }
+
         if (StringUtils.isNotBlank(proxy)) {
             try {
                 proxy = engine.execute(proxy, variables).toString();
@@ -102,7 +103,7 @@ public class SeleniumExecutor implements ShapeExecutor {
         //REVIEW 一个任务流中只能有一个Driver，在页面跳转操作可以使用resp.toUrl。打开其他Driver时，原页面会关闭（同一个变量名）
         if(oldResp instanceof SeleniumResponse){
             SeleniumResponse oldResponse = (SeleniumResponse) oldResp;
-            oldResponse.quit();
+            oldResponse.close();
         }
         WebDriver driver = null;
         try {
@@ -132,7 +133,7 @@ public class SeleniumExecutor implements ShapeExecutor {
             //访问跳转url网站
             driver.get(url);
             SeleniumResponse response = new SeleniumResponse(driver);
-            SeleniumResponseHolder.add(context, response);
+            SpiderResponseHolder.add(context, response);
             if(cookieAutoSet){
                 Map<String, String> cookies = response.getCookies();
                 cookieContext.putAll(cookies);
@@ -141,10 +142,6 @@ public class SeleniumExecutor implements ShapeExecutor {
         } catch (Exception e) {
             logger.error("请求出错，异常信息：{}", e);
             if (driver != null) {
-                try {
-                    driver.close();
-                } catch (Exception ignored) {
-                }
                 try {
                     driver.quit();
                 } catch (Exception ignored) {

@@ -51,8 +51,11 @@ public interface SpiderResponse {
 	default void setCharset(String charset){
 
 	}
+
 	@Example("${resp.stream}")
 	default InputStream getStream(){
 		return null;
 	}
+
+	default void close(){};
 }
