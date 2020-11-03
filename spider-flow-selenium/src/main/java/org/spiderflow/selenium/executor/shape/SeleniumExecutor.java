@@ -101,7 +101,7 @@ public class SeleniumExecutor implements ShapeExecutor {
         }
         Object oldResp = variables.get(nodeVariableName);
         //REVIEW 一个任务流中只能有一个Driver，在页面跳转操作可以使用resp.toUrl。打开其他Driver时，原页面会关闭（同一个变量名）
-        if(oldResp instanceof SeleniumResponse){
+        if (oldResp instanceof SeleniumResponse) {
             SeleniumResponse oldResponse = (SeleniumResponse) oldResp;
             oldResponse.close();
         }
@@ -119,13 +119,13 @@ public class SeleniumExecutor implements ShapeExecutor {
             //初始化打开浏览器
             driver.get(url);
             //设置浏览器Cookies环境
-            if(cookieAutoSet){
+            if (cookieAutoSet) {
                 driver.manage().deleteAllCookies();
                 URL tempUrl = new URL(url);
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MONTH, 1);
                 for (Map.Entry<String, String> item : cookieContext.entrySet()) {
-                    Cookie cookie = new Cookie(item.getKey(), item.getValue(), tempUrl.getHost(), "/", calendar.getTime() , false, false);
+                    Cookie cookie = new Cookie(item.getKey(), item.getValue(), tempUrl.getHost(), "/", calendar.getTime(), false, false);
                     driver.manage().addCookie(cookie);
                 }
                 logger.debug("自动设置Cookie：{}", cookieContext);
@@ -134,7 +134,7 @@ public class SeleniumExecutor implements ShapeExecutor {
             driver.get(url);
             SeleniumResponse response = new SeleniumResponse(driver);
             SpiderResponseHolder.add(context, response);
-            if(cookieAutoSet){
+            if (cookieAutoSet) {
                 Map<String, String> cookies = response.getCookies();
                 cookieContext.putAll(cookies);
             }
@@ -143,9 +143,19 @@ public class SeleniumExecutor implements ShapeExecutor {
             logger.error("请求出错，异常信息：{}", e);
             if (driver != null) {
                 try {
+                    driver.close();
+                } catch (Exception ignored) {
+                }
+               /* try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }*/
+                try {
                     driver.quit();
                 } catch (Exception ignored) {
                 }
+                driver = null;
             }
             ExceptionUtils.wrapAndThrow(e);
         }
