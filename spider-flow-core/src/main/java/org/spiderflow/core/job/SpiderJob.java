@@ -72,15 +72,17 @@ public class SpiderJob extends QuartzJobBean {
     }
 
     public void run(SpiderFlow spiderFlow, Task task, Date nextExecuteTime) {
+        final Integer taskId = task.getId();
+        final String flowId = spiderFlow.getId();
         SpiderJobContext context = null;
         Date now = new Date();
         try {
-            context = SpiderJobContext.create(this.workspace, spiderFlow.getId(), task.getId(), false);
+            context = SpiderJobContext.create(this.workspace, flowId, taskId, false);
             SpiderContextHolder.set(context);
-            contextMap.put(task.getId(), context);
-            logger.info("开始执行任务{}", spiderFlow.getName());
+            contextMap.put(taskId, context);
+            logger.info("开始执行任务{} taskId：{}", spiderFlow.getName(), taskId);
             spider.run(spiderFlow, context);
-            logger.info("执行任务{}完毕，下次执行时间：{}", spiderFlow.getName(), nextExecuteTime == null ? null : DateFormatUtils.format(nextExecuteTime, "yyyy-MM-dd HH:mm:ss"));
+            logger.info("执行任务{}完毕，下次执行时间：{} taskId：{} ", spiderFlow.getName(), nextExecuteTime == null ? null : DateFormatUtils.format(nextExecuteTime, "yyyy-MM-dd HH:mm:ss"), taskId);
         } catch (Exception e) {
             logger.error("执行任务{}出错", spiderFlow.getName(), e);
         } finally {
@@ -89,7 +91,7 @@ public class SpiderJob extends QuartzJobBean {
             }
             task.setEndTime(new Date());
             taskService.saveOrUpdate(task);
-            contextMap.remove(task.getId());
+            contextMap.remove(taskId);
             SpiderContextHolder.remove();
         }
         spiderFlowService.executeCountIncrement(spiderFlow.getId(), now, nextExecuteTime);
@@ -99,7 +101,7 @@ public class SpiderJob extends QuartzJobBean {
         return contextMap.get(taskId);
     }
 
-    public static Map<Integer,SpiderContext> getSpiderContext() {
+    public static Map<Integer, SpiderContext> getSpiderContext() {
         return new ConcurrentHashMap(contextMap);
     }
 }

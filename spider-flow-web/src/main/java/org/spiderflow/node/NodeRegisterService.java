@@ -245,7 +245,7 @@ public class NodeRegisterService {
      * @return
      */
     public JsonBean<Integer> runAsync(String id) {
-        SpiderFlow flow = spiderFlowService.getById(id);
+        /*SpiderFlow flow = spiderFlowService.getById(id);
         if (flow == null) {
             return new JsonBean<>(0, "找不到此爬虫信息");
         }
@@ -253,8 +253,10 @@ public class NodeRegisterService {
         task.setFlowId(flow.getId());
         task.setBeginTime(new Date());
         taskService.save(task);
-        Spider.executorInstance.submit(() -> spiderJob.run(flow, task, null));
-        return new JsonBean<>(task.getId());
+        Spider.executorInstance.submit(() -> spiderJob.run(flow, task, null));*/
+
+        spiderFlowService.run(id);
+        return new JsonBean<>(1);
     }
 
     /**
