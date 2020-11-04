@@ -94,37 +94,18 @@ public class SeleniumResponse implements SpiderResponse {
         return this;
     }
 
-    /*public void quit(){
-     *//*
-			try {
-				driver.close();
-			} catch (Exception ignored) {
-			}
-		*//*
-		try {
-			driver.quit();
-		} catch (Exception ignored) {
-		}
-	}*/
-
     public void close() {
         if (driver != null) {
             try {
                 driver.close();
             } catch (Exception ignored) {
             }
-           /* try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
             try {
                 driver.quit();
             } catch (Exception ignored) {
             }
         }
 
-        driver = null;
     }
 
 

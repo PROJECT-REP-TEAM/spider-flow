@@ -86,6 +86,7 @@ public class ChromeDriverProvider implements DriverProvider {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         options.addArguments("blink-settings=imagesEnabled=false");
+        options.addArguments("--disable-gpu");
 
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         options.merge(capabilities);

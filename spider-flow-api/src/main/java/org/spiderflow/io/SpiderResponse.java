@@ -27,6 +27,7 @@ public interface SpiderResponse {
 	default Object getJson(){
 		return JSON.parse(getHtml());
 	}
+
 	@Comment("获取cookies")
 	@Example("${resp.cookies}")
 	Map<String,String> getCookies();

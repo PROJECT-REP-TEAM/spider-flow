@@ -146,16 +146,10 @@ public class SeleniumExecutor implements ShapeExecutor {
                     driver.close();
                 } catch (Exception ignored) {
                 }
-               /* try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }*/
                 try {
                     driver.quit();
                 } catch (Exception ignored) {
                 }
-                driver = null;
             }
             ExceptionUtils.wrapAndThrow(e);
         }
