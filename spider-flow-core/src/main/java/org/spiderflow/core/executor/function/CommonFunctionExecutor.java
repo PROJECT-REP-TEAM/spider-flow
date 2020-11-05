@@ -9,7 +9,12 @@ import org.spiderflow.core.utils.ExtractUtils;
 import org.spiderflow.executor.FunctionExecutor;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Json和String互相转换 工具类 防止NPE
@@ -24,6 +29,8 @@ public class CommonFunctionExecutor implements FunctionExecutor {
     public String getFunctionPrefix() {
         return "common";
     }
+
+
 
     @Comment("将对象装为json键值对字符串")
     @Example("${common.toJsonStr(objVar,selectKey,selectValue)}")
@@ -44,6 +51,29 @@ public class CommonFunctionExecutor implements FunctionExecutor {
             Map<String, Object> datas = getMap(element, selectKey, selectValue);
             if (datas != null)
                 list.add(datas);
+        }
+        return object != null ? JSON.toJSONString(list) : null;
+    }
+
+    @Comment("将对象装为json键值对字符串")
+    @Example("${common.getTextArrayAttrStr(objVar,attr)}")
+    public static String getTextArrayAttrStr(Object object,String attr) {
+        List<String> list = new ArrayList<>();
+
+        if (object instanceof Elements) {
+            Elements elements = (Elements) object;
+            Iterator<Element> els = elements.iterator();
+            while (els.hasNext()) {
+                Element element = els.next();
+                String text = element.attr(attr);
+                if (text != null && text.trim().length() > 0)
+                    list.add(text.trim());
+            }
+        } else if (object instanceof Element) {
+            Element element = (Element) object;
+            String text = element.attr(attr);
+            if (text != null && text.trim().length() > 0)
+                list.add(text.trim());
         }
         return object != null ? JSON.toJSONString(list) : null;
     }
