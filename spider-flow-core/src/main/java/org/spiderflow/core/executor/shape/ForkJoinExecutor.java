@@ -43,6 +43,10 @@ public class ForkJoinExecutor implements ShapeExecutor {
             if (isDone) {
                 try {
                     SpiderResponseHolder.clear(context);
+                    variables.clear();
+                    cachedVariables.remove(key);
+                    System.gc();
+                   // System.out.println("isDone");
                 } catch (Exception e) {
                     logger.error("", e);
                 }
@@ -54,10 +58,13 @@ public class ForkJoinExecutor implements ShapeExecutor {
                     cachedVariables.put(key, cached);
                 }
                 cached.putAll(variables);
+                System.gc();
+               // System.out.println("cached.putAll;"+key+" cached:"+cached.keySet());
             } else if (cached != null) {
                 //将缓存的变量存入到当前变量中,传递给下一级
                 variables.putAll(cached);
                 cachedVariables.remove(key);
+               // System.out.println("cachedVariables.remove(key);"+key);
             }
             return isDone;
         }

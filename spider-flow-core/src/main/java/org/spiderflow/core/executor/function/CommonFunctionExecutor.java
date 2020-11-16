@@ -1,6 +1,8 @@
 package org.spiderflow.core.executor.function;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.spiderflow.annotation.Comment;
@@ -31,7 +33,6 @@ public class CommonFunctionExecutor implements FunctionExecutor {
     }
 
 
-
     @Comment("将对象装为json键值对字符串")
     @Example("${common.toJsonStr(objVar,selectKey,selectValue)}")
     public static String toJsonStr(Object object, String selectKey, String selectValue) {
@@ -57,7 +58,7 @@ public class CommonFunctionExecutor implements FunctionExecutor {
 
     @Comment("将对象装为json键值对字符串")
     @Example("${common.getTextArrayAttrStr(objVar,attr)}")
-    public static String getTextArrayAttrStr(Object object,String attr) {
+    public static String getTextArrayAttrStr(Object object, String attr) {
         List<String> list = new ArrayList<>();
 
         if (object instanceof Elements) {
@@ -129,6 +130,80 @@ public class CommonFunctionExecutor implements FunctionExecutor {
                 list.add(datas);
         }
         return object != null ? JSON.toJSONString(list) : null;
+    }
+
+
+    @Comment("将对象装为json键值对字符串")
+    @Example("${common.toJsonParamLSCSStr(objVar,theRatio,keys,selects)}")
+    public static String toJsonParamLSCSStr(Object object, Integer theRatio, ArrayList<String> keys, ArrayList<String> selects) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        if (object == null || keys == null || selects == null || keys.size() == 0 || selects.size() == 0 || keys.size() != selects.size()) {
+            return "[]";
+        }
+
+        if (theRatio == null) {
+            theRatio = 1;
+        }
+
+        //theRatio = ExtractUtils.getValueByJsonPath(object, jsonpath);
+
+        //    System.out.println(object);
+
+        if (object instanceof JSONArray) {
+            JSONArray jsonArray = (JSONArray) object;
+            for (int x = 0; x < jsonArray.size(); x++) {
+                Map<String, Object> datas = new HashMap<>();
+                JSONObject element = jsonArray.getJSONObject(x);
+                int size = selects.size();
+                for (int i = 0; i < size; i++) {
+                    String key = keys.get(i);
+                    String attr = null;
+                    if (selects != null && selects.size() >= i + 1) {
+                        attr = selects.get(i);
+                    }
+                    String value = getJSONValue(element, selects.get(i), attr);
+                    if (value != null) {
+                        try{
+                            value = value.trim();
+                            if ("spNumber".equalsIgnoreCase(attr)) {
+                                datas.put(key, Integer.valueOf(value) * theRatio);
+                            } else {
+                                datas.put(key, value);
+                            }
+                        }catch (Exception e){
+                        }
+                    }
+                }
+                if (datas.size() > 0)
+                    list.add(datas);
+            }
+        } else if (object instanceof JSONObject) {
+            JSONObject element = (JSONObject) object;
+            Map<String, Object> datas = new HashMap<>();
+            int size = selects.size();
+            for (int i = 0; i < size; i++) {
+                String key = keys.get(i);
+                String attr = null;
+                if (selects != null && selects.size() >= i + 1) {
+                    attr = selects.get(i);
+                }
+                String value = getJSONValue(element, selects.get(i), attr);
+                if (value != null) {
+                    try{
+                        value = value.trim();
+                        if ("spNumber".equalsIgnoreCase(attr)) {
+                            datas.put(key, Integer.valueOf(value) * theRatio);
+                        } else {
+                            datas.put(key, value);
+                        }
+                    }catch (Exception e){
+                    }
+                }
+            }
+            if (datas.size() > 0)
+                list.add(datas);
+        }
+        return JSON.toJSONString(list);
     }
 
 
@@ -227,6 +302,10 @@ public class CommonFunctionExecutor implements FunctionExecutor {
         if (key == null || key.size() == 0)
             return null;
         return key.get(0);
+    }
+
+    public static String getJSONValue(JSONObject jsonObject, String selectKey, String attrKey) {
+        return jsonObject.getString(attrKey);
     }
 
 

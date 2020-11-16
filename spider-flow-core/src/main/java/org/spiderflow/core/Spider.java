@@ -148,7 +148,6 @@ public class Spider {
 							} catch (InterruptedException | ExecutionException e) {
 							}
 							return 0;
-
 						});
 						if (max.isPresent()) {	//判断任务是否完成
 							queue.remove(max.get());
@@ -278,6 +277,7 @@ public class Spider {
 						// 存入item
 						nVariables.put(loopItem,loopArray == null ? i : Array.get(loopArray, i));
 					}
+
 					tasks.add(new SpiderTask(TtlRunnable.get(() -> {
 						if (context.isRunning()) {
 							try {
@@ -297,6 +297,24 @@ public class Spider {
 							}
 						}
 					}), node, nVariables, executor));
+
+				/*	if (context.isRunning()) {
+						try {
+							//死循环检测，当执行节点次数大于阈值时，结束本次测试
+							AtomicInteger executeCount = context.get(ATOMIC_DEAD_CYCLE);
+							if (executeCount != null && executeCount.incrementAndGet() > deadCycle) {
+								context.setRunning(false);
+								return;
+							}
+							//执行节点具体逻辑
+							executor.execute(node, context, nVariables);
+							//当未发生异常时，移除ex变量
+							nVariables.remove("ex");
+						} catch (Throwable t) {
+							nVariables.put("ex", t);
+							logger.error("执行节点[{}:{}]出错,异常信息：{}", node.getNodeName(), node.getNodeId(), t);
+						}
+					}*/
 				}
 			}
 			LinkedBlockingQueue<Future<?>> futureQueue = context.getFutureQueue();

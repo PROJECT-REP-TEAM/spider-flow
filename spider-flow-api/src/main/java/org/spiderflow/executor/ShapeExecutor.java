@@ -41,6 +41,6 @@ public interface ShapeExecutor {
 	}
 	
 	default boolean isThread(){
-		return true;
+		return false;
 	}
 }
