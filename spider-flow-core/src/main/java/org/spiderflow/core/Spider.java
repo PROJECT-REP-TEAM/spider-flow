@@ -200,6 +200,8 @@ public class Spider {
 	 * 执行节点
 	 */
 	public void executeNode(SpiderNode fromNode, SpiderNode node, SpiderContext context, Map<String, Object> variables) {
+
+
 		String shape = node.getStringJsonValue("shape");
 		if (StringUtils.isBlank(shape)) {
 			executeNextNodes(node, context, variables);
@@ -257,6 +259,7 @@ public class Spider {
 			}
 		}
 		if (loopCount > 0) {
+
 			//获取循环下标的变量名称
 			String loopVariableName = node.getStringJsonValue(ShapeExecutor.LOOP_VARIABLE_NAME);
 			String loopItem = node.getStringJsonValue(LoopExecutor.LOOP_ITEM,"item");
@@ -292,29 +295,11 @@ public class Spider {
 								//当未发生异常时，移除ex变量
 								nVariables.remove("ex");
 							} catch (Throwable t) {
-								nVariables.put("ex", t);
+									nVariables.put("ex", t);
 								logger.error("执行节点[{}:{}]出错,异常信息：{}", node.getNodeName(), node.getNodeId(), t);
 							}
 						}
 					}), node, nVariables, executor));
-
-				/*	if (context.isRunning()) {
-						try {
-							//死循环检测，当执行节点次数大于阈值时，结束本次测试
-							AtomicInteger executeCount = context.get(ATOMIC_DEAD_CYCLE);
-							if (executeCount != null && executeCount.incrementAndGet() > deadCycle) {
-								context.setRunning(false);
-								return;
-							}
-							//执行节点具体逻辑
-							executor.execute(node, context, nVariables);
-							//当未发生异常时，移除ex变量
-							nVariables.remove("ex");
-						} catch (Throwable t) {
-							nVariables.put("ex", t);
-							logger.error("执行节点[{}:{}]出错,异常信息：{}", node.getNodeName(), node.getNodeId(), t);
-						}
-					}*/
 				}
 			}
 			LinkedBlockingQueue<Future<?>> futureQueue = context.getFutureQueue();
