@@ -42,7 +42,6 @@ public class ForkJoinExecutor implements ShapeExecutor {
             if (isDone) {
                 try {
                     SpiderResponseHolder.clear(context);
-                    //cachedVariables.remove(key);
                     System.gc();
                 } catch (Exception e) {
                     logger.error("", e);
@@ -57,7 +56,6 @@ public class ForkJoinExecutor implements ShapeExecutor {
                 cached.putAll(variables);
                 System.gc();
             } else if (cached != null) {
-                //将缓存的变量存入到当前变量中,传递给下一级
                 variables.putAll(cached);
                 cachedVariables.remove(key);
             }
