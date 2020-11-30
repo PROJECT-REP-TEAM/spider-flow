@@ -476,7 +476,7 @@ SpiderFlowGrammer.prototype.init = function(){
         lambdasArrayFunctions.push(makeLambdaFunction('map', 'List', 'map((e,i)->expression)', '将列表中的元素转为其他类型数据', 'map((e,i)->${1:e})'));
         lambdasArrayFunctions.push(makeLambdaFunction('reduce', 'Object', 'reduce((a,b)->expression)', '将列表中的元素整合为一个数据', 'reduce((a,b)->${1:a+b})'));
         lambdasArrayFunctions.push(makeLambdaFunction('sort', 'List', 'sort((a,b)->expression)', '将列表中的元素进行排序', 'sort((a,b)->${1:a-b})'));
-        lambdasArrayFunctions.push(makeLambdaFunction('distinct', 'List', 'distinct(e->expression)', '将列表中的元素按条件去重', 'sort(e->${1:e})'));
+        lambdasArrayFunctions.push(makeLambdaFunction('distinct', 'List', 'distinct(e->expression)', '将列表中的元素按条件去重', 'distinct(e->${1:e})'));
         lambdasArrayFunctions.push(makeLambdaFunction('distinct', 'List', 'distinct((e,i)->expression)', '将列表中的元素按条件去重', 'distinct((e,i)->${1:e})'));
         lambdasArrayFunctions.push(makeLambdaFunction('every', 'boolean', 'every(e->expression)', '是否每个元素都符合条件', 'every(e->${1:true})'));
         lambdasArrayFunctions.push(makeLambdaFunction('every', 'boolean', 'every((e,i)->expression)', '是否每个元素都符合条件', 'every((e,i)->${1:true})'));
