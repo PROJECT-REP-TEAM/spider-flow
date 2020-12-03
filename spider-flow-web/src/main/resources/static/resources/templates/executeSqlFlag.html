@@ -1,0 +1,65 @@
+<div class="layui-tab layui-tab-fixed layui-tab-brief">
+  <ul class="layui-tab-title">
+    <li class="layui-this">配置</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+    	<form class="layui-form editor-form-node" lay-filter="executesql-form">
+			<div class="layui-row">
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">节点名称</label>
+						<div class="layui-input-block">
+							<input type="text" name="value" placeholder="请输入节点名称" value="{{=d.value}}" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">数据源</label>
+						<div class="layui-input-block">
+							<select name="datasourceId">
+								{{# layui.each(d.datasources,function(index,datasource){ }}
+								<option value="{{=datasource.id}}" {{datasource.id == d.data.object.datasourceId ? 'selected': ''}}>{{datasource.name}}</option>
+								{{# }) }}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">表名</label>
+						<div class="layui-input-block">
+							<input type="text" name="tableName" placeholder="请输入主键名称" value="{{=d.data.object.tableName}}" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md3">
+					<div class="layui-form-item">
+						<label class="layui-form-label">主键名称</label>
+						<div class="layui-input-block">
+							<input type="text" name="pkName" placeholder="请输入主键名称" value="{{=d.data.object.pkName}}" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+    	</form>
+    </div>
+  </div>
+</div>
+<script>
+	$.ajax({
+		url : 'datasource/all',
+		success : function(datasources){
+			for(var i =0;i<datasources.length;i++){
+				var ds = datasources[i];
+				$('select[name=datasourceId]').append('<option value="'+ds.id+'">'+ds.name+'</option>');
+			}
+			layui.form.render();
+			var selectDataSourceId = '{{=d.data.object.datasourceId}}';
+			if(selectDataSourceId != ''){
+				$('.layui-form-select dd[lay-value='+selectDataSourceId+']').trigger('click');
+			}
+		}
+	})
+</script>

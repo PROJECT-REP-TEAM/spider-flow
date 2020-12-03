@@ -35,6 +35,7 @@ public class ProcessExecutor implements ShapeExecutor{
 	@Override
 	public void execute(SpiderNode node, SpiderContext context, Map<String,Object> variables) {
 		String flowId = node.getStringJsonValue("flowId");
+		variables.put("flowId",flowId);
 		SpiderFlow spiderFlow = spiderFlowService.getById(flowId);
 		if(spiderFlow != null){
 			logger.info("执行子流程:{}", spiderFlow.getName());

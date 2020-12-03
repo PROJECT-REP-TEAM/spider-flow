@@ -74,6 +74,7 @@ public class Spider {
 		SpiderNode root = SpiderFlowUtils.loadXMLFromString(spiderFlow.getXml());
 		// 流程开始通知
 		flowNoticeService.sendFlowNotice(spiderFlow, FlowNoticeType.startNotice);
+		variables.put("flowId",spiderFlow.getId());
 		executeRoot(root, context, variables);
 		// 流程结束通知
 		flowNoticeService.sendFlowNotice(spiderFlow, FlowNoticeType.endNotice);
@@ -82,7 +83,6 @@ public class Spider {
 
 	public List<SpiderOutput> run(SpiderFlow spiderFlow, SpiderContext context) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("flowId",context.getFlowId());
 		return run(spiderFlow, context, map);
 	}
 
@@ -93,8 +93,10 @@ public class Spider {
 		AtomicInteger executeCount = new AtomicInteger(0);
 		//存入到上下文中，以供后续检测
 		context.put(ATOMIC_DEAD_CYCLE, executeCount);
+		Map<String, Object> variables = new HashMap<>();
+		variables.put("flowId","test-flowId");
 		//执行根节点
-		executeRoot(root, context, new HashMap<>());
+		executeRoot(root, context,variables);
 		//当爬虫任务执行完毕时,判断是否超过预期
 		if (executeCount.get() > deadCycle) {
 			logger.error("检测到可能出现死循环,测试终止");
@@ -200,7 +202,6 @@ public class Spider {
 	 * 执行节点
 	 */
 	public void executeNode(SpiderNode fromNode, SpiderNode node, SpiderContext context, Map<String, Object> variables) {
-
 
 		String shape = node.getStringJsonValue("shape");
 		if (StringUtils.isBlank(shape)) {

@@ -27,9 +27,7 @@ public class FunctionService extends ServiceImpl<FunctionMapper, Function> {
             ScriptManager.lock();
             ScriptManager.clearFunctions();
             ScriptEngine engine = ScriptManager.createEngine();
-            super.list().forEach(function -> {
-                ScriptManager.registerFunction(engine,function.getName(),function.getParameter(),function.getScript());
-            });
+            super.list().forEach(function -> ScriptManager.registerFunction(engine,function.getName(),function.getParameter(),function.getScript()));
             ScriptManager.setScriptEngine(engine);
         } finally {
             ScriptManager.unlock();

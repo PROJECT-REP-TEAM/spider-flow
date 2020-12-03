@@ -20,7 +20,6 @@ import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 public class SpiderApplication implements ServletContextInitializer{
 	
 	public static void main(String[] args) throws IOException {
-		
 		SpringApplication.run(SpiderApplication.class, args);
 	}
 

@@ -22,7 +22,9 @@ public class DataSourceUtils {
 	private static final Map<String,DataSource> datasources = new HashMap<>();
 	
 	private static DataSourceService dataSourceService;
-	
+
+	private static DruidDataSource dataSource;
+
 	public static DataSource createDataSource(String className,String url,String username,String password){
 		DruidDataSource datasource = new DruidDataSource();
 		datasource.setDriverClassName(className);
@@ -61,4 +63,12 @@ public class DataSourceUtils {
 		DataSourceUtils.dataSourceService = dataSourceService;
 	}
 
+	@Autowired
+	public void setDataSource(DruidDataSource dataSource) {
+		DataSourceUtils.dataSource = dataSource;
+	}
+
+	public static DruidDataSource getDataSource() {
+		return dataSource;
+	}
 }

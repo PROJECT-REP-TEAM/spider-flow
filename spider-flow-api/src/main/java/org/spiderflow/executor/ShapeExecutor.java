@@ -1,5 +1,6 @@
 package org.spiderflow.executor;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.spiderflow.context.SpiderContext;
@@ -34,7 +35,7 @@ public interface ShapeExecutor {
 	 * @param context 爬虫上下文
 	 * @param variables 节点流程的全部变量的集合
 	 */
-	void execute(SpiderNode node, SpiderContext context, Map<String, Object> variables);
+	void execute(SpiderNode node, SpiderContext context, Map<String, Object> variables) throws IOException;
 	
 	default boolean allowExecuteNext(SpiderNode node, SpiderContext context, Map<String, Object> variables){
 		return true;
