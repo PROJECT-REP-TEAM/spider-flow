@@ -14,8 +14,10 @@ import org.quartz.spi.OperableTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spiderflow.core.job.SpiderJobManager;
+import org.spiderflow.core.mapper.FlowLockMapper;
 import org.spiderflow.core.mapper.FlowNoticeMapper;
 import org.spiderflow.core.mapper.SpiderFlowMapper;
+import org.spiderflow.core.model.FlowLock;
 import org.spiderflow.core.model.SpiderFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,9 @@ public class SpiderFlowService extends ServiceImpl<SpiderFlowMapper, SpiderFlow>
 	
 	@Autowired
 	private SpiderFlowMapper sfMapper;
+
+	@Autowired
+	private FlowLockMapper flowLockMapper;
 	
 	@Autowired
 	private SpiderJobManager spiderJobManager;
@@ -68,6 +73,21 @@ public class SpiderFlowService extends ServiceImpl<SpiderFlowMapper, SpiderFlow>
 				}
 			}
 		}
+
+		List<SpiderFlow> all = sfMapper.selectFlows();
+		new Thread(() -> {
+			try{
+				for (SpiderFlow sf :all) {
+					try{
+						FlowLock flowLock = new FlowLock();
+						flowLock.setLockName(sf.getId());
+						flowLockMapper.insert(flowLock);
+					}catch (Exception e){
+					}
+				}
+			}catch (Exception e){
+			}
+		}).start();
 	}
 
 	public IPage<SpiderFlow> selectSpiderPage(Page<SpiderFlow> page, String name){
@@ -121,6 +141,9 @@ public class SpiderFlowService extends ServiceImpl<SpiderFlowMapper, SpiderFlow>
 			String id = UUID.randomUUID().toString().replace("-", "");
 			sfMapper.insertSpiderFlow(id, spiderFlow.getName(), spiderFlow.getXml());
 			spiderFlow.setId(id);
+			FlowLock flowLock = new FlowLock();
+			flowLock.setLockName(id);
+			flowLockMapper.insert(flowLock);
 		}
 		File file = new File(workspace,spiderFlow.getId() + File.separator + "xmls" + File.separator + System.currentTimeMillis() + ".xml");
 		try {
@@ -160,6 +183,9 @@ public class SpiderFlowService extends ServiceImpl<SpiderFlowMapper, SpiderFlow>
 		sfMapper.deleteById(id);
 		spiderJobManager.remove(id);
 		flowNoticeMapper.deleteById(id);
+		FlowLock flowLock = new FlowLock();
+		flowLock.setLockName(id);
+		flowLockMapper.delete(new QueryWrapper<FlowLock>().eq("lock_name", id));
 	}
 	
 	public List<SpiderFlow> selectOtherFlows(String id){
