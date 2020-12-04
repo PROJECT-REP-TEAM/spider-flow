@@ -2,7 +2,6 @@ package org.spiderflow.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spiderflow.core.service.ExecuteFlagService;
 import org.spiderflow.model.JsonBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +14,6 @@ public class ExecuteFlagController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExecuteFlagController.class);
 
-
-    @Autowired
-    private ExecuteFlagService executeFlagService;
 
     @RequestMapping("/takeFlag")
     public JsonBean<String> loadFlagData(@RequestParam("flowId") String flowId) {

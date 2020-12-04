@@ -38,7 +38,6 @@ public class ExecuteFlagExecutor implements ShapeExecutor, Grammerable {
     public static final String TABLE_Name = "tableName";
 
 
-
     @Autowired
     private NodeTaskStatusMapper nodeTaskStatusMapper;
 
@@ -71,7 +70,6 @@ public class ExecuteFlagExecutor implements ShapeExecutor, Grammerable {
                     conn = DataSourceUtils.getDataSource().getConnection();
                 }
                 conn.setAutoCommit(false);
-
                 preparedStatement = conn.prepareStatement("select * from sp_lock where lock_name = '" + flowId + "' for update");
                 preparedStatement.execute();
 
@@ -100,7 +98,7 @@ public class ExecuteFlagExecutor implements ShapeExecutor, Grammerable {
                 } catch (Exception e) {
                     variables.put("rs", null);
                     //logger.error("执行sql出错,异常信息:{}", e.getMessage(), e);
-                   // ExceptionUtils.wrapAndThrow(e);
+                    // ExceptionUtils.wrapAndThrow(e);
                 }
 
                 if (rs != null) {
