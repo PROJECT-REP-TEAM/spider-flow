@@ -122,8 +122,8 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
             String token = node.getStringJsonValue(TOKEN_NAME);
             outputRemote(remoteUrl, token, outputData);
         }
-
         context.addOutput(output);
+        context.remove("collects");
     }
 
     /**
@@ -228,13 +228,23 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
         }
 
         try {
-            RestTemplate template = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            HttpMethod method = HttpMethod.POST;
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-            headers.set("Authorization", token);
-            HttpEntity<String> entity = new HttpEntity<>(JSON.toJSONString(data), headers);
-            template.exchange(remoteUrl, method, entity, String.class);
+            Object out = null;
+
+            if (data.containsKey("collects")) {
+                out = data.get("collects");
+            } else
+                out = data;
+
+            if (out != null) {
+                RestTemplate template = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                HttpMethod method = HttpMethod.POST;
+                headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+                headers.set("Authorization", token);
+                HttpEntity<String> entity = new HttpEntity<>(JSON.toJSONString(out), headers);
+                template.exchange(remoteUrl, method, entity, String.class);
+            }
+
         } catch (Exception e) {
             logger.error("远程服务输出,异常信息:{}", e.getMessage(), e);
             ExceptionUtils.wrapAndThrow(e);

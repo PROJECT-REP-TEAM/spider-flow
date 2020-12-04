@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/reset")
+@RequestMapping("/HqcwApi/Crawler/UpdatePriceAnalyseItems")
 public class RestResController {
 
-    @PostMapping("output")
+    @PostMapping
     public String outputData(@RequestBody String json) {
         System.out.println(json);
         return "success";
