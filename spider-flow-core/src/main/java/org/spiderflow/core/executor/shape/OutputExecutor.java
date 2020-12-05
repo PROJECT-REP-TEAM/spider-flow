@@ -123,7 +123,7 @@ public class OutputExecutor implements ShapeExecutor, SpiderListener {
             outputRemote(remoteUrl, token, outputData);
         }
         context.addOutput(output);
-        context.remove("collects");
+        context.clearCollects();
     }
 
     /**

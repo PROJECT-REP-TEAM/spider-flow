@@ -14,28 +14,13 @@
 						</div>
 					</div>
 				</div>
-				<div class="layui-col-md3">
-					<div class="layui-form-item">
-						<label class="layui-form-label">循环变量</label>
-						<div class="layui-input-block">
-							<input type="text" name="loopVariableName" placeholder="请输入循环变量" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.loopVariableName}}">
-						</div>
-					</div>
-				</div>
-				<div class="layui-col-md3">
-					<div class="layui-form-item">
-						<label class="layui-form-label">循环次数</label>
-						<div class="layui-input-block" codemirror="loopCount" placeholder="请输入循环次数" data-value="{{=d.data.object.loopCount}}"></div>
-					</div>
-				</div>
-
 			</div>
 
 			<table class="layui-table" id="spider-output" data-cell="{{=d.cell.id}}" data-keys="output-name,output-value"></table>
     		<hr>
     		<div class="layui-form-item">
     			<div class="layui-input-inline">
-	    			<button class="layui-btn table-row-add" type="button" for="spider-output">添加一个输出项</button>
+	    			<button class="layui-btn table-row-add" type="button" for="spider-output">添加一个收集项</button>
 	    		</div>
 	    	</div>
     	</form>
@@ -48,11 +33,11 @@
 			elem : '#spider-output',
 			limit: 50,
 			cols : [[{
-				title : '输出项',
+				title : '收集项',
 				width : 150,
 				templet : '#output-name-tmpl'
 			},{
-				title : '输出值',
+				title : '收集值',
 				templet : '#output-value-tmpl'
 			},{
 				title : '操作',
@@ -62,7 +47,7 @@
 			}]],
 			data : data,
 			text : {
-				none : '暂未设置输出项'
+				none : '暂未设置收集项'
 			}
 		})
 	}

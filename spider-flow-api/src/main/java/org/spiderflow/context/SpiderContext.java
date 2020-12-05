@@ -11,110 +11,131 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 爬虫上下文
- * @author jmxd
  *
+ * @author jmxd
  */
-public class SpiderContext extends HashMap<String, Object>{
-	
-	private String id = UUID.randomUUID().toString().replace("-", "");
+public class SpiderContext extends HashMap<String, Object> {
 
-	/**
-	 * 流程ID
-	 */
-	private String flowId;
-	
-	private static final long serialVersionUID = 8379177178417619790L;
+    private String id = UUID.randomUUID().toString().replace("-", "");
 
-	/**
-	 * 流程执行线程
-	 */
-	private SubThreadPoolExecutor threadPool;
+    /**
+     * 流程ID
+     */
+    private String flowId;
 
-	/**
-	 * 根节点
-	 */
-	private SpiderNode rootNode;
+    private static final long serialVersionUID = 8379177178417619790L;
 
-	/**
-	 * 爬虫是否运行中
-	 */
-	private volatile boolean running = true;
+    /**
+     * 流程执行线程
+     */
+    private SubThreadPoolExecutor threadPool;
 
-	/**
-	 * Future队列
-	 */
-	private LinkedBlockingQueue<Future<?>> futureQueue = new LinkedBlockingQueue<>();
+    /**
+     * 根节点
+     */
+    private SpiderNode rootNode;
 
-	/**
-	 * Cookie上下文
-	 */
-	private CookieContext cookieContext = new CookieContext();
+    /**
+     * 爬虫是否运行中
+     */
+    private volatile boolean running = true;
 
-	public List<SpiderOutput> getOutputs() {
-		return Collections.emptyList();
-	}
+    /**
+     * Future队列
+     */
+    private LinkedBlockingQueue<Future<?>> futureQueue = new LinkedBlockingQueue<>();
 
-	public <T> T get(String key){
-		return (T) super.get(key);
-	}
+    /**
+     * Cookie上下文
+     */
+    private CookieContext cookieContext = new CookieContext();
 
-	public <T> T get(String key,T defaultValue){
-		T value = this.get(key);
-		return value == null ? defaultValue : value;
-	}
+    private List<Map<String, Object>> collects = new ArrayList<>();
 
-	public String getFlowId() {
-		return flowId;
-	}
+    public List<SpiderOutput> getOutputs() {
+        return Collections.emptyList();
+    }
 
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
-	}
+    public <T> T get(String key) {
+        return (T) super.get(key);
+    }
 
-	public LinkedBlockingQueue<Future<?>> getFutureQueue() {
-		return futureQueue;
-	}
+    public <T> T get(String key, T defaultValue) {
+        T value = this.get(key);
+        return value == null ? defaultValue : value;
+    }
 
-	public boolean isRunning() {
-		return running;
-	}
+    public String getFlowId() {
+        return flowId;
+    }
 
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
+    public void setFlowId(String flowId) {
+        this.flowId = flowId;
+    }
 
-	public void addOutput(SpiderOutput output){
+    public LinkedBlockingQueue<Future<?>> getFutureQueue() {
+        return futureQueue;
+    }
 
-	}
+    public boolean isRunning() {
+        return running;
+    }
 
-	public SubThreadPoolExecutor getThreadPool() {
-		return threadPool;
-	}
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
 
-	public void setThreadPool(SubThreadPoolExecutor threadPool) {
-		this.threadPool = threadPool;
-	}
+    public void addOutput(SpiderOutput output) {
 
-	public SpiderNode getRootNode() {
-		return rootNode;
-	}
+    }
 
-	public void setRootNode(SpiderNode rootNode) {
-		this.rootNode = rootNode;
-	}
-	
-	public String getId() {
-		return id;
-	}
-	
-	public CookieContext getCookieContext() {
-		return cookieContext;
-	}
+    public SubThreadPoolExecutor getThreadPool() {
+        return threadPool;
+    }
 
-	public void pause(String nodeId,String event,String key,Object value){}
+    public void setThreadPool(SubThreadPoolExecutor threadPool) {
+        this.threadPool = threadPool;
+    }
 
-	public void resume(){}
+    public SpiderNode getRootNode() {
+        return rootNode;
+    }
 
-	public void stop(){}
+    public void setRootNode(SpiderNode rootNode) {
+        this.rootNode = rootNode;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public CookieContext getCookieContext() {
+        return cookieContext;
+    }
+
+    public void pause(String nodeId, String event, String key, Object value) {
+    }
+
+    public void resume() {
+    }
+
+    public void stop() {
+    }
+
+    public void collect(Map<String, Object> value) {
+        collects.add(value);
+    }
+
+    public List collects() {
+        return new ArrayList(collects);
+    }
+
+    public void clearCollects() {
+        collects.clear();
+    }
+
+    public int collectSize() {
+       return collects.size();
+    }
 
 }

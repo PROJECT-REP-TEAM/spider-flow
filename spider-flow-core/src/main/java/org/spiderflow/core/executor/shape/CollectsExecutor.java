@@ -10,6 +10,7 @@ import org.spiderflow.executor.ShapeExecutor;
 import org.spiderflow.listener.SpiderListener;
 import org.spiderflow.model.SpiderNode;
 import org.spiderflow.model.SpiderOutput;
+import org.spiderflow.utils.SpiderResponseHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,26 +22,19 @@ import java.util.*;
  * @author Administrator
  */
 @Component
-public class CollectExecutor implements ShapeExecutor, SpiderListener {
+public class CollectsExecutor implements ShapeExecutor, SpiderListener {
 
 
     public static final String OUTPUT_NAME = "output-name";
 
     public static final String OUTPUT_VALUE = "output-value";
+    public static final String COLLECTS = "collects";
 
+    private static Logger logger = LoggerFactory.getLogger(CollectsExecutor.class);
 
-    private static Logger logger = LoggerFactory.getLogger(CollectExecutor.class);
-
-    /**
-     * 输出CSVPrinter节点变量
-     */
-    private Map<String, CSVPrinter> cachePrinter = new HashMap<>();
 
     @Override
     public void execute(SpiderNode node, SpiderContext context, Map<String, Object> variables) {
-        SpiderOutput output = new SpiderOutput();
-        output.setNodeName(node.getNodeName());
-        output.setNodeId(node.getNodeId());
 
         List<Map<String, String>> outputs = node.getListJsonValue(OUTPUT_NAME, OUTPUT_VALUE);
         Map<String, Object> outputData = new HashMap<>(outputs.size());
@@ -55,21 +49,25 @@ public class CollectExecutor implements ShapeExecutor, SpiderListener {
             } catch (Exception e) {
                 logger.error("输出{}出错，异常信息：{}", outputName, e);
             }
-            output.addOutput(outputName, value);
+
             if (value != null) {
                 outputData.put(outputName, value);
             }
+
         }
 
         if (outputData.size() > 0) {
-            List<Map<String, Object>> collects = context.get("collects");
-            if (collects == null) {
-                collects = new ArrayList<>();
-                context.put("collects", collects);
-            }
-            collects.add(outputData);
+//            List<Map<String, Object>> collects = context.get(COLLECTS);
+//            if (collects == null) {
+//                collects = new ArrayList<>();
+//                context.put(COLLECTS, collects);
+//            }
+//            collects.add(outputData);
+//
+//            variables.put(COLLECTS, collects);
+            context.collect(outputData);
 
-            variables.put("collects",collects);
+          //  System.out.println("collect outputData:" + context.collectSize());
         }
 
     }
@@ -82,28 +80,26 @@ public class CollectExecutor implements ShapeExecutor, SpiderListener {
 
     @Override
     public void beforeStart(SpiderContext context) {
-
+        System.out.println("collects beforeStart... collectSize:" + context.collectSize());
     }
 
     @Override
     public void afterEnd(SpiderContext context) {
-        this.releasePrinters();
+        System.out.println("collects afterEnd... collectSize:" + context.collectSize());
     }
 
-    private void releasePrinters() {
-        for (Iterator<Map.Entry<String, CSVPrinter>> iterator = this.cachePrinter.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<String, CSVPrinter> entry = iterator.next();
-            CSVPrinter printer = entry.getValue();
-            if (printer != null) {
-                try {
-                    printer.flush();
-                    printer.close();
-                    this.cachePrinter.remove(entry.getKey());
-                } catch (IOException e) {
-                    logger.error("文件输出错误,异常信息:{}", e.getMessage(), e);
-                    ExceptionUtils.wrapAndThrow(e);
-                }
+
+    @Override
+    public boolean allowExecuteNext(SpiderNode node, SpiderContext context, Map<String, Object> variables) {
+        synchronized (node) {
+            boolean isDone = node.isDone();
+            if (isDone) {
+                variables.put(COLLECTS, context.collects());
+                context.clearCollects();
+                logger.info("收集完成。。。" + context.collectSize());
             }
+            return isDone;
         }
     }
+
 }

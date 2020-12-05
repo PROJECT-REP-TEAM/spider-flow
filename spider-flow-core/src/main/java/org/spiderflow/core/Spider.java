@@ -78,6 +78,7 @@ public class Spider {
 		executeRoot(root, context, variables);
 		// 流程结束通知
 		flowNoticeService.sendFlowNotice(spiderFlow, FlowNoticeType.endNotice);
+
 		return context.getOutputs();
 	}
 
@@ -137,6 +138,7 @@ public class Spider {
 		//启动一个线程开始执行任务,并监听其结束并执行下一级
 		Future<?> f = pool.submitAsync(TtlRunnable.get(() -> {
 			try {
+				context.clearCollects();
 				//执行具体节点
 				Spider.this.executeNode(null, root, context, variables);
 				Queue<Future<?>> queue = context.getFutureQueue();
@@ -208,10 +210,12 @@ public class Spider {
 			executeNextNodes(node, context, variables);
 			return;
 		}
+
 		//判断箭头上的条件，如果不成立则不执行
 		if (!executeCondition(fromNode, node, variables, context)) {
 			return;
 		}
+
 		logger.debug("执行节点[{}:{}]", node.getNodeName(), node.getNodeId());
 		//找到对应的执行器
 		ShapeExecutor executor = ExecutorsUtils.get(shape);
@@ -219,10 +223,13 @@ public class Spider {
 			logger.error("执行失败,找不到对应的执行器:{}", shape);
 			context.setRunning(false);
 		}
+
 		int loopCount = 1;	//循环次数默认为1,如果节点有循环属性且填了循环次数/集合,则取出循环次数
 		int loopStart = 0;	//循环起始位置
 		int loopEnd = 1;	//循环结束位置
+
 		String loopCountStr = node.getStringJsonValue(ShapeExecutor.LOOP_COUNT);
+
 		Object loopArray = null;
 		boolean isLoop = false;
 		if (isLoop = StringUtils.isNotBlank(loopCountStr)) {
@@ -253,7 +260,7 @@ public class Spider {
 						loopEnd = Math.max(loopEnd + end + 1,0);
 					}
 				}
-				logger.info("获取循环次数{}={}", loopCountStr, loopCount);
+				logger.debug("获取循环次数{}={}", loopCountStr, loopCount);
 			} catch (Throwable t) {
 				loopCount = 0;
 				logger.error("获取循环次数失败,异常信息：{}", t);

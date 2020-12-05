@@ -41,6 +41,7 @@ public class ForkJoinExecutor implements ShapeExecutor {
             boolean isDone = node.isDone();
             if (isDone) {
                 try {
+                    context.clearCollects();
                     SpiderResponseHolder.clear(context);
                     System.gc();
                 } catch (Exception e) {

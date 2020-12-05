@@ -854,12 +854,12 @@ function runSpider(debug){
 			id : 'test-window',
 			type : 1,
 			skin : 'layer-test',
-			content : '<div class="test-window-container"><div class="output-container"><div class="layui-tab layui-tab-fixed layui-tab-brief"><ul class="layui-tab-title"></ul><div class="layui-tab-content"></div></div></div><canvas class="log-container" width="677" height="100"></canvas></div>',
-			area : ["680px","400px"],
+			content : '<div class="test-window-container"><div class="output-container"><div class="layui-tab layui-tab-fixed layui-tab-brief"><ul class="layui-tab-title"></ul><div class="layui-tab-content"></div></div></div><canvas class="log-container" width="845" height="100"></canvas></div>',
+			area : ["850px","430px"],
 			shade : 0,
 			offset : 'rt',
 			maxmin :true,
-			maxWidth : 700,
+			maxWidth : 900,
 			maxHeight : 400,
 			title : '测试窗口',
 			btn : ['关闭','显示/隐藏输出','显示/隐藏日志','停止'],
@@ -1002,7 +1002,7 @@ function runSpider(debug){
 									$tab.find(".layui-tab-title").append('<li>' + outputTitle + '</li>');
 									$tab.find(".layui-tab-content").append('<div class="layui-tab-item" data-output="'+tableId+'"></div>');
 								}
-								$table = $('<canvas width="677" height="200"/>').appendTo($(".test-window-container .output-container .layui-tab-item[data-output="+tableId+"]"));
+								$table = $('<canvas width="845" height="200"/>').appendTo($(".test-window-container .output-container .layui-tab-item[data-output="+tableId+"]"));
 								$table.attr('id',tableId);
 								tableMap[tableId].instance = new CanvasViewer({
 									element : document.getElementById(tableId),
@@ -1138,7 +1138,7 @@ function runSpider(debug){
 								msg = temp.innerHTML;
 								temp = null;
 							}
-							var content = '<div class="message-content" style="padding:10px;'+(isJson ? '':'font-weight: bold;font-family:Consolas;font-size:12px;')+'">'+(isJson ? '' : msg.replace(/\n/g,'<br>')).replace(/ /g,'&nbsp;').replace(/\t/g,'&nbsp;&nbsp;&nbsp;&nbsp;')+'</div>';
+							var content = '<div class="message-content" style="padding:30px;'+(isJson ? '':'font-weight: bold;font-family:Consolas;font-size:12px;')+'">'+(isJson ? '' : msg.replace(/\n/g,'<br>')).replace(/ /g,'&nbsp;').replace(/\t/g,'&nbsp;&nbsp;&nbsp;&nbsp;')+'</div>';
 							var tooltip = bindTooltip(content,selector);
 							if(isJson){
 								var $dom = $(tooltip.dom).find(".message-content");
