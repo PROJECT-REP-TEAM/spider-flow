@@ -18,20 +18,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="layui-col-md4">
-					<div class="layui-form-item">
-						<label class="layui-form-label">循环变量</label>
-						<div class="layui-input-block">
-							<input type="text" name="loopVariableName" placeholder="请输入循环变量" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.loopVariableName}}">
-						</div>
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<div class="layui-form-item">
-						<label class="layui-form-label">循环次数</label>
-						<div class="layui-input-block" codemirror="loopCount" placeholder="请输入循环次数" data-value="{{=d.data.object.loopCount}}"></div>
-					</div>
-				</div>
 			</div>
 			<div class="layui-row">
 				<div class="layui-col-md2">
@@ -75,14 +61,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="layui-col-md4">
+				<#--<div class="layui-col-md4">
 					<div class="layui-form-item">
 						<label class="layui-form-label">页面编码</label>
 						<div class="layui-input-block">
 							<input type="text" name="response-charset" placeholder="请输入页面编码" autocomplete="off" class="layui-input input-default" value="{{=d.data.object['response-charset']}}">
 						</div>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<div class="layui-row">
 				<div class="layui-col-md4">
@@ -102,19 +88,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-row">
-				<div class="layui-col-md8">
-					<div class="layui-form-item">
-						<label class="layui-form-label">请求设置</label>
-						<div class="layui-input-block">
-							<input type="checkbox" title="跟随重定向" value="follow-redirect" lay-skin="primary" {{d.data.object['follow-redirect'] == '0' ? '' : 'checked'}}/>
-							<input type="checkbox" title="TLS证书验证" value="tls-validate" lay-skin="primary" {{d.data.object['tls-validate'] == '0' ? '' : 'checked'}}/>
-							<input type="checkbox" title="重复不执行后续节点" value="repeat-ignore-execute" lay-skin="primary" {{d.data.object['repeat-ignore-execute'] == '1' ? 'checked' : ''}}/>
-						</div>
-					</div>
-				</div>
-			</div>
-
     	</form>
     </div>
     <div class="layui-tab-item">

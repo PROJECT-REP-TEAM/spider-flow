@@ -3,15 +3,10 @@ package org.spiderflow.reset.io;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
-import org.jsoup.Jsoup;
-import org.spiderflow.config.AbuyunProxyConfig;
+import org.jsoup.helper.HttpConnection;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Authenticator;
-import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
-import java.net.Proxy;
 import java.util.Map;
 
 /**
@@ -28,7 +23,7 @@ public class HttpResetRequest {
     }
 
     public HttpResetRequest url(String url) {
-        this.connection = Jsoup.connect(url);
+        this.connection = HttpConnection.connect(url);
         this.connection.method(Method.GET);
         this.connection.timeout(60000);
         return this;
@@ -114,20 +109,6 @@ public class HttpResetRequest {
 
     public HttpResetRequest proxy(String host, int port) {
         this.connection.proxy(host, port);
-        return this;
-    }
-
-    public HttpResetRequest proxyDef() {
-        Authenticator.setDefault(new Authenticator() {
-            public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(AbuyunProxyConfig.proxyUser, AbuyunProxyConfig.proxyPass.toCharArray());
-            }
-        });
-
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(AbuyunProxyConfig.proxyHost, AbuyunProxyConfig.proxyPort));
-
-        this.connection.proxy(proxy);
-        this.connection.header(AbuyunProxyConfig.switchIpHeaderKey, AbuyunProxyConfig.switchIpHeaderVal);
         return this;
     }
 

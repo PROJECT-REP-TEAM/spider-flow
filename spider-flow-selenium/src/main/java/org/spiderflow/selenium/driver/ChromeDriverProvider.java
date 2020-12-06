@@ -28,6 +28,7 @@ public class ChromeDriverProvider implements DriverProvider {
     public WebDriver getWebDriver(SpiderNode node, String proxyStr) {
         System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         ChromeOptions options = new ChromeOptions();
+
 //        String userAgent = node.getStringJsonValue(USER_AGENT);
         //设置User-Agent
 //        if(StringUtils.isNotBlank(userAgent)){

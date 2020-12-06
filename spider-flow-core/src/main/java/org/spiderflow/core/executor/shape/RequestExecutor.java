@@ -10,6 +10,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spiderflow.Grammerable;
+import org.spiderflow.config.FlowProxyConfig;
 import org.spiderflow.context.CookieContext;
 import org.spiderflow.context.SpiderContext;
 import org.spiderflow.core.executor.function.MD5FunctionExecutor;
@@ -19,12 +20,14 @@ import org.spiderflow.core.utils.ExpressionUtils;
 import org.spiderflow.executor.ShapeExecutor;
 import org.spiderflow.io.SpiderResponse;
 import org.spiderflow.listener.SpiderListener;
+import org.spiderflow.model.FlowProxy;
 import org.spiderflow.model.Grammer;
 import org.spiderflow.model.SpiderNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -41,7 +44,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
 
     public static final String URL = "url";
 
-    public static final String PROXY = "proxy";
+    public static final String PROXY_NAME = "proxyName";
 
     public static final String REQUEST_METHOD = "method";
 
@@ -104,6 +107,9 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
 
     @Value("${spider.bloomfilter.error-rate:0.00001}")
     private Double errorRate;
+
+    @Resource
+    private FlowProxyConfig flowProxyConfig;
 
     private static final Logger logger = LoggerFactory.getLogger(RequestExecutor.class);
 
@@ -252,23 +258,26 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                 setRequestParameter(node, request, node.getListJsonValue(PARAMETER_NAME, PARAMETER_VALUE), context, variables);
             }
             //设置代理
-            String proxy = node.getStringJsonValue(PROXY);
-            if (StringUtils.isNotBlank(proxy)) {
+            String proxyName = node.getStringJsonValue(PROXY_NAME);
+            if (StringUtils.isNotBlank(proxyName)) {
                 try {
-                    Object value = ExpressionUtils.execute(proxy, variables);
-                    context.pause(node.getNodeId(), "common", PROXY, value);
+                    Object value = ExpressionUtils.execute(proxyName, variables);
+                    context.pause(node.getNodeId(), "common", proxyName, value);
                     if (value != null) {
-                        String[] proxyArr = value.toString().split(":");
-                        if (proxyArr.length == 2) {
-                            request.proxy(proxyArr[0], Integer.parseInt(proxyArr[1]));
-                            logger.info("设置代理：{}", proxy);
+                        if (flowProxyConfig.getFlowProxys() != null && flowProxyConfig.getFlowProxys().get(proxyName.toString()) != null) {
+                            FlowProxy flowProxy = flowProxyConfig.getFlowProxys().get(proxyName);
+                            request.proxy(flowProxy);
+                        } else {
+                            String[] proxyArr = value.toString().split(":");
+                            if (proxyArr.length == 2) {
+                                request.proxy(proxyArr[0], Integer.parseInt(proxyArr[1]));
+                                logger.info("设置代理：{}", proxyName);
+                            }
                         }
                     }
                 } catch (Exception e) {
                     logger.error("设置代理出错，异常信息:{}", e);
                 }
-            } else {
-                request.proxyDef();
             }
             Throwable exception = null;
             try {
