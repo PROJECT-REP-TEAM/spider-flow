@@ -23,11 +23,11 @@ import org.spiderflow.listener.SpiderListener;
 import org.spiderflow.model.FlowProxy;
 import org.spiderflow.model.Grammer;
 import org.spiderflow.model.SpiderNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -108,7 +108,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
     @Value("${spider.bloomfilter.error-rate:0.00001}")
     private Double errorRate;
 
-    @Resource
+    @Autowired
     private FlowProxyConfig flowProxyConfig;
 
     private static final Logger logger = LoggerFactory.getLogger(RequestExecutor.class);
