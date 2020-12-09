@@ -44,7 +44,8 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
 
     public static final String URL = "url";
 
-    public static final String PROXY_NAME = "proxyName";
+    public static final String PROXY = "proxy";
+    public static final String FLOW_PROXY_NAME = "flowProxyName";
 
     public static final String REQUEST_METHOD = "method";
 
@@ -258,21 +259,33 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                 setRequestParameter(node, request, node.getListJsonValue(PARAMETER_NAME, PARAMETER_VALUE), context, variables);
             }
             //设置代理
-            String proxyName = node.getStringJsonValue(PROXY_NAME);
-            if (StringUtils.isNotBlank(proxyName)) {
+            String proxy = node.getStringJsonValue(PROXY);
+            String flowProxyName = node.getStringJsonValue(FLOW_PROXY_NAME);
+            if (StringUtils.isNotBlank(proxy)) {
                 try {
-                    Object value = ExpressionUtils.execute(proxyName, variables);
-                    context.pause(node.getNodeId(), "common", proxyName, value);
+                    Object value = ExpressionUtils.execute(proxy, variables);
+                    context.pause(node.getNodeId(), "common", proxy, value);
                     if (value != null) {
-                        if (flowProxyConfig.getFlowProxys() != null && flowProxyConfig.getFlowProxys().get(proxyName.toString()) != null) {
-                            FlowProxy flowProxy = flowProxyConfig.getFlowProxys().get(proxyName);
+                        String[] proxyArr = value.toString().split(":");
+                        if (proxyArr.length == 2) {
+                            request.proxy(proxyArr[0], Integer.parseInt(proxyArr[1]));
+                            logger.info("设置代理：{}", proxy);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("设置代理出错，异常信息:{}", e);
+                }
+            }
+
+            if (StringUtils.isNotBlank(flowProxyName)) {
+                try {
+                    Object value = ExpressionUtils.execute(flowProxyName, variables);
+                    context.pause(node.getNodeId(), "common", flowProxyName, value);
+                    if (value != null) {
+                        if (flowProxyConfig.getFlowProxys() != null && flowProxyConfig.getFlowProxys().get(flowProxyName.toString()) != null) {
+                            FlowProxy flowProxy = flowProxyConfig.getFlowProxys().get(flowProxyName);
                             request.proxy(flowProxy);
                         } else {
-                            String[] proxyArr = value.toString().split(":");
-                            if (proxyArr.length == 2) {
-                                request.proxy(proxyArr[0], Integer.parseInt(proxyArr[1]));
-                                logger.info("设置代理：{}", proxyName);
-                            }
                         }
                     }
                 } catch (Exception e) {

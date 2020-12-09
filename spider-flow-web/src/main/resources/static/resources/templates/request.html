@@ -106,7 +106,14 @@
 				<div class="layui-col-md4">
 					<div class="layui-form-item">
 						<label class="layui-form-label">代理</label>
-						<div class="layui-input-block" placeholder="host:port | proxyName_config" codemirror="proxyName" data-value="{{=d.data.object.proxyName}}"></div>
+						<div class="layui-input-block">
+							<input type="text" name="proxy" placeholder="host:port" autocomplete="off" class="layui-input input-default" value="{{=d.data.object.proxy}}">
+							<select name="flowProxyName">
+								{{# layui.each(d.flowProxys,function(index,flowProxy){ }}
+								<option value="{{=flowProxy.name}}" {{flowProxy.name == d.data.object.flowProxyName ? 'selected': ''}}>{{flowProxy.flowProxyName}}</option>
+								{{# }) }}
+							</select>
+						</div>
 					</div>
 				</div>
 				<div class="layui-col-md8">
@@ -328,4 +335,21 @@
 		renderRequestHeader(getCellData({{d.cell.id}},$("#request-header").data('keys').split(",")));
 		renderBodyParameter(getCellData({{d.cell.id}},$("#body-parameter").data('keys').split(",")));
 	});
+</script>
+
+<script>
+	$.ajax({
+		url : 'flowProxy/all',
+		success : function(flowProxys){
+			for(var i =0;i<flowProxys.length;i++){
+				var ds = flowProxys[i];
+				$('select[name=flowProxyName]').append('<option value="'+ds.name+'">'+ds.name+'</option>');
+			}
+			layui.form.render();
+			var selectFlowProxyName = '{{=d.data.object.flowProxyName}}';
+			if(selectFlowProxyName != ''){
+				$('.layui-form-select dd[lay-value='+selectFlowProxyName+']').trigger('click');
+			}
+		}
+	})
 </script>

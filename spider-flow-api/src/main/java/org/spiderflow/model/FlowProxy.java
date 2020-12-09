@@ -1,6 +1,7 @@
 package org.spiderflow.model;
 
 public class FlowProxy {
+    private String name;
     private String proxyHost;
     private Integer proxyPort;
     private String proxyUser;
@@ -77,5 +78,13 @@ public class FlowProxy {
 
     public void setScheme(String scheme) {
         this.scheme = scheme;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
