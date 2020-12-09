@@ -75,12 +75,12 @@ public class CollectsExecutor implements ShapeExecutor, SpiderListener {
 
     @Override
     public void beforeStart(SpiderContext context) {
-        System.out.println("collects beforeStart... collectSize:" + context.collectSize());
+        //System.out.println("collects beforeStart... collectSize:" + context.collectSize());
     }
 
     @Override
     public void afterEnd(SpiderContext context) {
-        System.out.println("collects afterEnd... collectSize:" + context.collectSize());
+        //System.out.println("collects afterEnd... collectSize:" + context.collectSize());
     }
 
 
