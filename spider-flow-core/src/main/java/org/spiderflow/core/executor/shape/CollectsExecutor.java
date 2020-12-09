@@ -1,7 +1,5 @@
 package org.spiderflow.core.executor.shape;
 
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spiderflow.context.SpiderContext;
@@ -9,11 +7,8 @@ import org.spiderflow.core.utils.ExpressionUtils;
 import org.spiderflow.executor.ShapeExecutor;
 import org.spiderflow.listener.SpiderListener;
 import org.spiderflow.model.SpiderNode;
-import org.spiderflow.model.SpiderOutput;
-import org.spiderflow.utils.SpiderResponseHolder;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
