@@ -12,6 +12,7 @@
     <url>https://gitee.com/jmxd/spider-flow/tree/master/spider-flow-web</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <docker.image.prefix>spider-flow</docker.image.prefix>
     </properties>
     <dependencies>
 
@@ -35,15 +36,42 @@
             <groupId>org.spiderflow</groupId>
             <artifactId>spider-flow-reset</artifactId>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>6.2.2.jre8</version>
+        </dependency>
+
     </dependencies>
     <build>
+
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <finalName>spider-flow</finalName>
                     <mainClass>org.spiderflow.SpiderApplication</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory></dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
         </plugins>

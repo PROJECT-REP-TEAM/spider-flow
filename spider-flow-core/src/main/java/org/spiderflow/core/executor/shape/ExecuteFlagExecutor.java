@@ -36,6 +36,7 @@ public class ExecuteFlagExecutor implements ShapeExecutor, Grammerable {
     public static final String SQL = "sql";
     public static final String PK_Name = "pkName";
     public static final String TABLE_Name = "tableName";
+    public static final String biz_name = "bizName";
 
 
     @Autowired
@@ -50,6 +51,7 @@ public class ExecuteFlagExecutor implements ShapeExecutor, Grammerable {
         String dsId = node.getStringJsonValue(DATASOURCE_ID);
         String pkName = node.getStringJsonValue(PK_Name);
         String tableName = node.getStringJsonValue(TABLE_Name);
+        String bizName = node.getStringJsonValue(biz_name);
         String flowId = (String) variables.get("flowId");
 
         if (StringUtils.isBlank(dsId)) {
@@ -58,9 +60,13 @@ public class ExecuteFlagExecutor implements ShapeExecutor, Grammerable {
             logger.warn("tableName为空！");
         } else if (StringUtils.isBlank(pkName)) {
             logger.warn("主键名称为空！");
-        } else if (StringUtils.isBlank(flowId)) {
-            logger.warn("flowId为空！");
+        } else if (StringUtils.isBlank(flowId) && StringUtils.isBlank(bizName) ) {
+            logger.warn("业务名称为空！");
         } else {
+
+            if (StringUtils.isNotBlank(bizName)) {
+                flowId = bizName;
+            }
 
             Connection conn = null;
             PreparedStatement preparedStatement = null;

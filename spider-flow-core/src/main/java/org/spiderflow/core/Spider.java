@@ -308,6 +308,7 @@ public class Spider {
 							}
 						}
 					}), node, nVariables, executor));
+
 				}
 			}
 			LinkedBlockingQueue<Future<?>> futureQueue = context.getFutureQueue();

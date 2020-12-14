@@ -225,7 +225,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
             if (cookieAutoSet && !cookieContext.isEmpty()) {
                 context.pause(node.getNodeId(), COOKIE_AUTO_SET, COOKIE_AUTO_SET, cookieContext);
                 request.cookies(cookieContext);
-                logger.info("自动设置Cookie：{}", cookieContext);
+                logger.debug("自动设置Cookie：{}", cookieContext);
             }
             //设置本节点Cookie
             cookies = getRequestCookie(node, node.getListJsonValue(COOKIE_NAME, COOKIE_VALUE), context, variables);
@@ -415,7 +415,7 @@ public class RequestExecutor implements ShapeExecutor, Grammerable, SpiderListen
                         if (value != null) {
                             cookieMap.put(cookieName, value.toString());
                             context.pause(node.getNodeId(), "request-cookie", cookieName, value.toString());
-                            logger.info("设置请求Cookie：{}={}", cookieName, value);
+                            logger.debug("设置请求Cookie：{}={}", cookieName, value);
                         }
                     } catch (Exception e) {
                         logger.error("设置请求Cookie：{}出错,异常信息：{}", cookieName, e);

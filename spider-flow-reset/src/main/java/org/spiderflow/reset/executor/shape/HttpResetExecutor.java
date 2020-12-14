@@ -288,7 +288,7 @@ public class HttpResetExecutor implements ShapeExecutor, Grammerable, SpiderList
                         if (value != null) {
                             cookieMap.put(cookieName, value.toString());
                             context.pause(node.getNodeId(), "request-cookie", cookieName, value.toString());
-                            logger.info("设置请求Cookie：{}={}", cookieName, value);
+                            logger.debug("设置请求Cookie：{}={}", cookieName, value);
                         }
                     } catch (Exception e) {
                         logger.error("设置请求Cookie：{}出错,异常信息：{}", cookieName, e);
