@@ -39,7 +39,7 @@ function renderCodeMirror(){
 			// 	scrollbarStyle : 'null',	//隐藏滚动条
 			// });
 			// initHint(cm);
-			codeMirrorInstances[$(this).attr('codemirror')] = cm;
+			// codeMirrorInstances[$(this).attr('codemirror')] = cm;
 			// cm.on('change',function(){
 			// 	$dom.attr('data-value',cm.getValue());
 			// 	if($dom.attr('codemirror') == 'condition'){
@@ -77,7 +77,14 @@ function renderCodeMirror(){
 					oldDecorations = decorations;
 				}
 			})
-			codeMirrorInstances[$(this).attr('codemirror')] = cm;
+			var codemirror = $dom.attr('codemirror');
+			if ($dom.hasClass('array')) {
+				var array = codeMirrorInstances[codemirror] || [];
+				array.push(cm);
+				codeMirrorInstances[codemirror] = array
+			} else {
+				codeMirrorInstances[codemirror] = cm;
+			}
 		});
 	});
 }
@@ -195,7 +202,13 @@ function validXML(callback){
 }
 function monacoLayout(){
 	for(var key in codeMirrorInstances){
-		codeMirrorInstances[key].layout();
+		if (codeMirrorInstances[key].length) {
+			for(var index in codeMirrorInstances[key]) {
+				codeMirrorInstances[key][index].layout();
+			}
+		} else {
+			codeMirrorInstances[key].layout();
+		}
 	}
 }
 $(function(){
